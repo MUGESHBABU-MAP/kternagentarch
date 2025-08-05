@@ -1,0 +1,192 @@
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Process Flows</h1>
+      <p class="text-base text-gray-500">Design and manage business process workflows</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button nz-button nzType="primary" (click)="createNewProcess()">
+        <i nz-icon nzType="plus" class="mr-1"></i>
+        Create Process
+      </button>
+      <button nz-button nzType="default" (click)="importProcess()">
+        <i nz-icon nzType="import" class="mr-1"></i>
+        Import
+      </button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nzType="default" nz-dropdown>
+          <i nz-icon nzType="more" class="mr-1"></i>
+          More Actions
+          <i nz-icon nzType="down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item (click)="exportProcesses()">
+            <i nz-icon nzType="export" class="mr-2"></i>
+            Export All
+          </li>
+          <li nz-menu-item (click)="validateProcesses()">
+            <i nz-icon nzType="check-circle" class="mr-2"></i>
+            Validate Processes
+          </li>
+          <li nz-menu-item (click)="generateReport()">
+            <i nz-icon nzType="file-text" class="mr-2"></i>
+            Generate Report
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-4">
+      <nz-input-group nzPrefixIcon="search" class="w-80">
+        <input 
+          type="text" 
+          nz-input 
+          placeholder="Search processes by name or description..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+        />
+      </nz-input-group>
+      <nz-select [(ngModel)]="selectedType" nzPlaceHolder="All Types" class="w-40" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Types"></nz-option>
+        <nz-option nzValue="business" nzLabel="Business"></nz-option>
+        <nz-option nzValue="technical" nzLabel="Technical"></nz-option>
+        <nz-option nzValue="integration" nzLabel="Integration"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedStatus" nzPlaceHolder="All Status" class="w-32" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Status"></nz-option>
+        <nz-option nzValue="active" nzLabel="Active"></nz-option>
+        <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
+        <nz-option nzValue="review" nzLabel="Review"></nz-option>
+        <nz-option nzValue="archived" nzLabel="Archived"></nz-option>
+      </nz-select>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-gray-500">Sort by:</span>
+      <nz-select [(ngModel)]="sortBy" class="w-32" (ngModelChange)="onSortChange()">
+        <nz-option nzValue="name" nzLabel="Name"></nz-option>
+        <nz-option nzValue="updated" nzLabel="Updated"></nz-option>
+        <nz-option nzValue="complexity" nzLabel="Complexity"></nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <!-- Process Flow Cards -->
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <nz-card 
+      *ngFor="let process of filteredProcesses" 
+      class="card hover-shadow hover-lift transition cursor-pointer"
+      (click)="openProcess(process)"
+    >
+      <div class="flex flex-col h-full">
+        <!-- Process Header -->
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" [style.background-color]="getTypeColor(process.type) + '20'">
+              <i nz-icon [nzType]="getProcessIcon(process.type)" [style.color]="getTypeColor(process.type)" class="text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ process.name }}</h3>
+              <div class="flex items-center gap-2">
+                <nz-tag [nzColor]="getTypeColor(process.type)" nzSize="small">{{ process.type }}</nz-tag>
+                <nz-tag [nzColor]="getStatusColor(process.status)" nzSize="small">{{ process.status }}</nz-tag>
+              </div>
+            </div>
+          </div>
+          <nz-dropdown [nzTrigger]="'click'">
+            <button nz-button nzType="text" nzSize="small" nz-dropdown (click)="$event.stopPropagation()">
+              <i nz-icon nzType="more"></i>
+            </button>
+            <ul nz-menu>
+              <li nz-menu-item (click)="editProcess(process, $event)">
+                <i nz-icon nzType="edit" class="mr-2"></i>
+                Edit
+              </li>
+              <li nz-menu-item (click)="duplicateProcess(process, $event)">
+                <i nz-icon nzType="copy" class="mr-2"></i>
+                Duplicate
+              </li>
+              <li nz-menu-item (click)="exportProcess(process, $event)">
+                <i nz-icon nzType="export" class="mr-2"></i>
+                Export
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item nzDanger (click)="deleteProcess(process, $event)">
+                <i nz-icon nzType="delete" class="mr-2"></i>
+                Delete
+              </li>
+            </ul>
+          </nz-dropdown>
+        </div>
+
+        <!-- Process Description -->
+        <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ process.description }}</p>
+
+        <!-- Process Flow Visualization -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-4 flex-1">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-medium text-gray-600">Process Flow</span>
+            <span class="text-xs text-gray-500">{{ process.steps }} steps</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div *ngFor="let step of getProcessSteps(process); let i = index" class="flex items-center">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                   [class.bg-primary]="step.status === 'completed'"
+                   [class.text-white]="step.status === 'completed'"
+                   [class.bg-warning]="step.status === 'active'"
+                   [class.text-white]="step.status === 'active'"
+                   [class.bg-gray-200]="step.status === 'pending'"
+                   [class.text-gray-600]="step.status === 'pending'">
+                {{ i + 1 }}
+              </div>
+              <div *ngIf="i < getProcessSteps(process).length - 1" 
+                   class="w-4 h-0.5 mx-1"
+                   [class.bg-primary]="step.status === 'completed'"
+                   [class.bg-gray-200]="step.status !== 'completed'">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Process Stats -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ process.complexity }}%</div>
+            <div class="text-xs text-gray-500">Complexity</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ process.duration }}</div>
+            <div class="text-xs text-gray-500">Duration</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ process.stakeholders }}</div>
+            <div class="text-xs text-gray-500">Stakeholders</div>
+          </div>
+        </div>
+
+        <!-- Process Meta -->
+        <div class="flex justify-between items-center text-xs text-gray-400 pt-3 border-t">
+          <span>Updated {{ process.lastUpdated }}</span>
+          <div class="flex items-center gap-1">
+            <nz-avatar [nzText]="process.author.initials" nzSize="small" class="w-5 h-5 text-xs"></nz-avatar>
+            <span>{{ process.author.name }}</span>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredProcesses.length === 0" class="empty-state">
+    <i nz-icon nzType="branch" class="text-6xl text-gray-300 mb-4"></i>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No process flows found</h3>
+    <p class="text-gray-500 mb-4">Create your first process flow to get started</p>
+    <button nz-button nzType="primary" (click)="createNewProcess()">
+      <i nz-icon nzType="plus" class="mr-1"></i>
+      Create Process
+    </button>
+  </div>
+</div>

@@ -1,0 +1,247 @@
+.logs-upload-container {
+  padding: 24px;
+
+  .upload-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .upload-instructions {
+    margin-bottom: 32px;
+  }
+
+  .upload-form {
+    .upload-section {
+      margin-bottom: 24px;
+
+      .upload-drag {
+        .ant-upload.ant-upload-drag {
+          border: 2px dashed #d9d9d9;
+          border-radius: 8px;
+          background: #fafafa;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: #1890ff;
+            background: #f0f8ff;
+          }
+
+          .ant-upload-drag-icon {
+            margin-bottom: 16px;
+
+            i {
+              font-size: 48px;
+              color: #1890ff;
+            }
+          }
+
+          .ant-upload-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #262626;
+            margin-bottom: 8px;
+          }
+
+          .ant-upload-hint {
+            color: #8c8c8c;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+
+    .description-section {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+
+      nz-form-label {
+        font-weight: 500;
+        color: #262626;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+    }
+
+    .upload-result {
+      margin-bottom: 24px;
+    }
+
+    .upload-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #f0f0f0;
+
+      .upload-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 16px;
+
+        .upload-controls {
+          width: 100%;
+          justify-content: center;
+        }
+
+        nz-button {
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  .processing-status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .status-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 32px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      .status-text {
+        text-align: center;
+
+        h4 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #262626;
+        }
+
+        p {
+          margin: 0;
+          color: #8c8c8c;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+// Global overrides for this component
+:host {
+  ::ng-deep {
+    .ant-upload-list {
+      .ant-upload-list-item {
+        border-radius: 6px;
+        border: 1px solid #e8e8e8;
+        background: #fafafa;
+
+        &:hover {
+          background: #f0f8ff;
+        }
+
+        .ant-upload-list-item-info {
+          .ant-upload-list-item-name {
+            color: #262626;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .ant-form-item-label {
+      font-weight: 500;
+    }
+
+    .ant-alert {
+      border-radius: 6px;
+    }
+
+    .ant-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 6px;
+      font-weight: 500;
+
+      &.ant-btn-primary {
+        background: #1890ff;
+        border-color: #1890ff;
+
+        &:hover {
+          background: #40a9ff;
+          border-color: #40a9ff;
+        }
+      }
+    }
+  }
+}
+
+// Button styles
+.btn-default {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    color: #40a9ff;
+    border-color: #40a9ff;
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    background: #40a9ff;
+    border-color: #40a9ff;
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}

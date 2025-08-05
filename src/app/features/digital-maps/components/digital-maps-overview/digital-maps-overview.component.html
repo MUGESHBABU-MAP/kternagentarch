@@ -1,0 +1,110 @@
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Digital Maps Overview</h1>
+      <p class="text-base text-gray-500">Manage your SAP system mappings and processes</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-medium text-gray-600">Role:</span>
+        <nz-select [(ngModel)]="userRole" nzSize="small" class="w-32">
+          <nz-option nzValue="developer" nzLabel="Developer"></nz-option>
+          <nz-option nzValue="stakeholder" nzLabel="Stakeholder"></nz-option>
+          <nz-option nzValue="integrator" nzLabel="Integrator"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards Section -->
+  <div class="grid grid-cols-4 gap-4 mb-6">
+    <nz-card *ngFor="let stat of statsCards" class="card hover-shadow hover-lift transition">
+      <div class="flex justify-between items-center">
+        <div class="flex-1">
+          <div class="text-sm text-gray-500 mb-2">{{ stat.title }}</div>
+          <div class="text-3xl font-semibold text-gray-900 mb-2">{{ stat.value }}</div>
+          <div class="flex items-center gap-1">
+            <i nz-icon [nzType]="stat.trendIcon" class="text-sm text-success"></i>
+            <span class="text-sm text-success">{{ stat.trend }}</span>
+          </div>
+        </div>
+        <div class="text-3xl opacity-80">
+          <i nz-icon [nzType]="stat.icon" [style.color]="stat.color"></i>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Content Section -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <!-- Recent Maps -->
+    <nz-card nzTitle="Recent Maps" class="card">
+      <div class="flex flex-col gap-4">
+        <div *ngFor="let activity of recentActivities" class="flex items-center gap-3 p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-fast">
+          <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
+            <i nz-icon [nzType]="activity.icon" [style.color]="getStatusColor(activity.status)"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-gray-900 truncate">{{ activity.title }}</div>
+            <div class="text-xs text-gray-500">{{ activity.time }}</div>
+          </div>
+          <div class="flex-shrink-0">
+            <nz-tag [nzColor]="getStatusColor(activity.status)" nzSize="small">{{ activity.status }}</nz-tag>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+
+    <!-- Team Activity -->
+    <nz-card nzTitle="Team Activity" class="card">
+      <div class="flex flex-col gap-4">
+        <div *ngFor="let member of teamActivities" class="flex items-center gap-3 p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-fast">
+          <div class="flex-shrink-0">
+            <nz-avatar [nzText]="member.initials" [style.background-color]="member.color" nzSize="small"></nz-avatar>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm text-gray-900 break-words">{{ member.action }}</div>
+            <div class="text-xs text-gray-500">{{ member.time }}</div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <nz-card nzTitle="Quick Actions" class="card">
+    <div class="grid grid-cols-3 gap-4">
+      <button 
+        (click)="navigateToMaps()"
+        nz-button
+        nzType="default"
+        nzSize="large"
+        class="h-20 flex flex-col items-center justify-center gap-2 hover-lift transition"
+      >
+        <i nz-icon nzType="environment" class="text-2xl text-primary"></i>
+        <span class="text-sm font-medium text-gray-900">View Maps</span>
+      </button>
+      <button 
+        (click)="navigateToProcesses()"
+        nz-button
+        nzType="default"
+        nzSize="large"
+        class="h-20 flex flex-col items-center justify-center gap-2 hover-lift transition"
+      >
+        <i nz-icon nzType="apartment" class="text-2xl text-primary"></i>
+        <span class="text-sm font-medium text-gray-900">Process Flows</span>
+      </button>
+      <button 
+        (click)="navigateToCollaboration()"
+        nz-button
+        nzType="default"
+        nzSize="large"
+        class="h-20 flex flex-col items-center justify-center gap-2 hover-lift transition"
+      >
+        <i nz-icon nzType="team" class="text-2xl text-primary"></i>
+        <span class="text-sm font-medium text-gray-900">Collaborate</span>
+      </button>
+    </div>
+  </nz-card>
+</div>

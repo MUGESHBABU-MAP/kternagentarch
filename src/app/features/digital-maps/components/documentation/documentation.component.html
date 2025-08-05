@@ -1,0 +1,184 @@
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Documentation</h1>
+      <p class="text-base text-gray-500">Manage documentation for digital maps and processes</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button nz-button nzType="primary" (click)="createDocument()">
+        <i nz-icon nzType="plus" class="mr-1"></i>
+        New Document
+      </button>
+      <button nz-button nzType="default" (click)="importDocument()">
+        <i nz-icon nzType="import" class="mr-1"></i>
+        Import
+      </button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nzType="default" nz-dropdown>
+          <i nz-icon nzType="more" class="mr-1"></i>
+          More
+          <i nz-icon nzType="down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item (click)="exportAll()">
+            <i nz-icon nzType="export" class="mr-2"></i>
+            Export All
+          </li>
+          <li nz-menu-item (click)="generateReport()">
+            <i nz-icon nzType="file-pdf" class="mr-2"></i>
+            Generate Report
+          </li>
+          <li nz-menu-item (click)="manageTemplates()">
+            <i nz-icon nzType="layout" class="mr-2"></i>
+            Manage Templates
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-4">
+      <nz-input-group nzPrefixIcon="search" class="w-80">
+        <input 
+          type="text" 
+          nz-input 
+          placeholder="Search documents..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+        />
+      </nz-input-group>
+      <nz-select [(ngModel)]="selectedCategory" nzPlaceHolder="All Categories" class="w-40" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Categories"></nz-option>
+        <nz-option nzValue="guide" nzLabel="User Guide"></nz-option>
+        <nz-option nzValue="technical" nzLabel="Technical"></nz-option>
+        <nz-option nzValue="process" nzLabel="Process"></nz-option>
+        <nz-option nzValue="api" nzLabel="API"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedStatus" nzPlaceHolder="All Status" class="w-32" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Status"></nz-option>
+        <nz-option nzValue="published" nzLabel="Published"></nz-option>
+        <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
+        <nz-option nzValue="review" nzLabel="Review"></nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <!-- Documents Grid -->
+  <div class="grid grid-cols-3 gap-6">
+    <nz-card 
+      *ngFor="let doc of filteredDocuments" 
+      class="card hover-shadow hover-lift transition cursor-pointer"
+      (click)="openDocument(doc)"
+    >
+      <div class="flex flex-col h-full">
+        <!-- Document Header -->
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" [style.background-color]="getCategoryColor(doc.category) + '20'">
+              <i nz-icon [nzType]="getDocumentIcon(doc.category)" [style.color]="getCategoryColor(doc.category)" class="text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ doc.title }}</h3>
+              <div class="flex items-center gap-2">
+                <nz-tag [nzColor]="getCategoryTagColor(doc.category)" nzSize="small">{{ doc.category }}</nz-tag>
+                <nz-tag [nzColor]="getStatusColor(doc.status)" nzSize="small">{{ doc.status }}</nz-tag>
+              </div>
+            </div>
+          </div>
+          <nz-dropdown [nzTrigger]="'click'">
+            <button nz-button nzType="text" nzSize="small" nz-dropdown (click)="$event.stopPropagation()">
+              <i nz-icon nzType="more"></i>
+            </button>
+            <ul nz-menu>
+              <li nz-menu-item (click)="editDocument(doc, $event)">
+                <i nz-icon nzType="edit" class="mr-2"></i>
+                Edit
+              </li>
+              <li nz-menu-item (click)="shareDocument(doc, $event)">
+                <i nz-icon nzType="share-alt" class="mr-2"></i>
+                Share
+              </li>
+              <li nz-menu-item (click)="duplicateDocument(doc, $event)">
+                <i nz-icon nzType="copy" class="mr-2"></i>
+                Duplicate
+              </li>
+              <li nz-menu-item (click)="downloadDocument(doc, $event)">
+                <i nz-icon nzType="download" class="mr-2"></i>
+                Download
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item nzDanger (click)="deleteDocument(doc, $event)">
+                <i nz-icon nzType="delete" class="mr-2"></i>
+                Delete
+              </li>
+            </ul>
+          </nz-dropdown>
+        </div>
+
+        <!-- Description -->
+        <p class="text-sm text-gray-500 mb-4 line-clamp-3">{{ doc.description }}</p>
+
+        <!-- Document Stats -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ doc.pages }}</div>
+            <div class="text-xs text-gray-500">Pages</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ doc.views }}</div>
+            <div class="text-xs text-gray-500">Views</div>
+          </div>
+          <div class="text-center">
+            <div class="text-lg font-semibold text-gray-900">{{ doc.version }}</div>
+            <div class="text-xs text-gray-500">Version</div>
+          </div>
+        </div>
+
+        <!-- Contributors -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-gray-600">Contributors</span>
+            <span class="text-xs text-gray-500">{{ doc.contributors.length }} people</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <nz-avatar 
+              *ngFor="let contributor of doc.contributors.slice(0, 4)" 
+              [nzText]="contributor.initials"
+              [style.background-color]="contributor.color"
+              nzSize="small"
+              [nzTooltipTitle]="contributor.name"
+              nz-tooltip
+              class="avatar-overlap"
+            ></nz-avatar>
+            <span *ngIf="doc.contributors.length > 4" class="text-xs text-gray-500 ml-2">
+              +{{ doc.contributors.length - 4 }} more
+            </span>
+          </div>
+        </div>
+
+        <!-- Meta Info -->
+        <div class="flex justify-between items-center text-xs text-gray-400 pt-3 border-t">
+          <span>Updated {{ doc.lastUpdated }}</span>
+          <div class="flex items-center gap-1">
+            <i nz-icon nzType="file-text" class="text-xs"></i>
+            <span>{{ doc.format }}</span>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredDocuments.length === 0" class="empty-state">
+    <i nz-icon nzType="file-text" class="text-6xl text-gray-300 mb-4"></i>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
+    <p class="text-gray-500 mb-4">Create your first document to get started</p>
+    <button nz-button nzType="primary" (click)="createDocument()">
+      <i nz-icon nzType="plus" class="mr-1"></i>
+      New Document
+    </button>
+  </div>
+</div>

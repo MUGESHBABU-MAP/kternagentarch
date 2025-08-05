@@ -1,0 +1,198 @@
+.logs-table-container {
+  .logs-summary {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+
+    .stat-card {
+      text-align: center;
+      padding: 16px;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+
+      .stat-title {
+        font-size: 14px;
+        color: #8c8c8c;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nz-col {
+        margin-bottom: 16px;
+        text-align: center;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .logs-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .sortable {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+
+      .sort-icon {
+        margin-left: 4px;
+        opacity: 0.6;
+        font-size: 12px;
+      }
+    }
+
+    .number-cell {
+      text-align: right;
+      font-family: 'Courier New', monospace;
+      font-weight: 500;
+    }
+  }
+
+  .empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+
+    .empty-footer {
+      color: #8c8c8c;
+      margin: 16px 0 0 0;
+      font-size: 14px;
+    }
+  }
+}
+
+// Global overrides for this component
+:host {
+  ::ng-deep {
+    .ant-statistic {
+      .ant-statistic-title {
+        font-size: 14px;
+        color: #8c8c8c;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      .ant-statistic-content {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+    }
+
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        border-bottom: 2px solid #e8e8e8;
+        font-weight: 600;
+        color: #262626;
+        padding: 12px 16px;
+
+        &.sortable {
+          transition: background-color 0.3s ease;
+        }
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: middle;
+
+        &:first-child {
+          font-weight: 500;
+        }
+      }
+
+      .ant-table-tbody > tr {
+        &:hover > td {
+          background: #f8f9fa;
+        }
+
+        &:last-child > td {
+          border-bottom: none;
+        }
+      }
+
+      .ant-pagination {
+        margin: 16px 0 0 0;
+        text-align: center;
+      }
+    }
+
+    .ant-tag {
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 12px;
+      padding: 2px 8px;
+      border: none;
+    }
+
+    .ant-empty {
+      .ant-empty-image {
+        margin-bottom: 16px;
+      }
+
+      .ant-empty-description {
+        color: #8c8c8c;
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+    }
+
+    // Responsive table adjustments
+    @media (max-width: 768px) {
+      .ant-table {
+        font-size: 12px;
+
+        .ant-table-thead > tr > th,
+        .ant-table-tbody > tr > td {
+          padding: 8px 12px;
+        }
+
+        .ant-table-thead > tr > th {
+          font-size: 12px;
+        }
+      }
+
+      .ant-statistic {
+        .ant-statistic-content {
+          font-size: 20px;
+        }
+      }
+    }
+
+    @media (max-width: 576px) {
+      .ant-table {
+        .ant-table-thead > tr > th,
+        .ant-table-tbody > tr > td {
+          padding: 6px 8px;
+        }
+
+        .number-cell {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}

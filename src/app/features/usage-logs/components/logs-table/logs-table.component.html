@@ -1,0 +1,100 @@
+<div class="logs-table-container">
+  
+  <!-- Summary Statistics -->
+  <div class="logs-summary">
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="8">
+        <div class="stat-card">
+          <div class="stat-title">Total Records</div>
+          <div class="stat-value" style="color: #1890ff;">{{ logs.length }}</div>
+        </div>
+      </nz-col>
+      <nz-col [nzSpan]="8">
+        <div class="stat-card">
+          <div class="stat-title">Total Transactions</div>
+          <div class="stat-value" style="color: #52c41a;">{{ getTotalTransactions() }}</div>
+        </div>
+      </nz-col>
+      <nz-col [nzSpan]="8">
+        <div class="stat-card">
+          <div class="stat-title">Fetch Time</div>
+          <div class="stat-value" style="color: #fa8c16;">{{ getFetchTime() }}</div>
+        </div>
+      </nz-col>
+    </nz-row>
+  </div>
+
+  <!-- View Controls -->
+  <div class="view-controls">
+    <div class="control-group">
+      <label>View By:</label>
+      <nz-radio-group [(ngModel)]="viewMode" (ngModelChange)="onViewModeChange()">
+        <label nz-radio nzValue="monthly">Monthly</label>
+        <label nz-radio nzValue="weekly">Weekly</label>
+      </nz-radio-group>
+    </div>
+    
+    <div class="control-group" *ngIf="viewMode === 'weekly'">
+      <label>Filter Date:</label>
+      <nz-date-picker 
+        [(ngModel)]="selectedDate" 
+        (ngModelChange)="onDateFilterChange()"
+        nzPlaceHolder="Select date"
+        nzFormat="yyyy-MM-dd">
+      </nz-date-picker>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="logs-table">
+    <nz-table 
+      #basicTable 
+      [nzData]="getSortedLogs()" 
+      nzBordered 
+      nzSize="middle"
+      [nzPageSize]="10"
+      [nzShowPagination]="logs.length > 10">
+      
+      <thead>
+        <tr>
+          <th 
+            *ngFor="let column of displayedColumns"
+            (click)="onSort(column.key)"
+            [class.sortable]="column.sortable">
+            {{ column.title }}
+            <i 
+              *ngIf="column.sortable" 
+              nz-icon 
+              [nzType]="getSortIcon(column.key)"
+              class="sort-icon">
+            </i>
+          </th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let log of basicTable.data">
+          <td>{{ log.date }}</td>
+          <td>
+            <nz-tag [nzColor]="getModuleColor(log.module)">
+              {{ log.module }}
+            </nz-tag>
+          </td>
+          <td class="number-cell">{{ formatNumber(log.transactions) }}</td>
+          <td class="number-cell">{{ formatNumber(log.users) }}</td>
+          <td class="number-cell">{{ log.responseTime }}s</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="logs.length === 0">
+    <nz-empty 
+      nzNotFoundImage="simple"
+      nzNotFoundContent="No usage logs available">
+    </nz-empty>
+    <p class="empty-footer">Upload log files or fetch data from SAP to see usage statistics here.</p>
+  </div>
+
+</div>

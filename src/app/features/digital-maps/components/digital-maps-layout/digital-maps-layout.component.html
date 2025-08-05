@@ -1,0 +1,102 @@
+<div class="app-container">
+  <!-- Sidebar -->
+  <div class="sidebar" [class.sidebar-collapsed]="sidebarCollapsed" [class.sidebar-expanded]="!sidebarCollapsed">
+    <!-- Logo Section -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <div class="flex items-center gap-3" *ngIf="!sidebarCollapsed">
+        <!-- <div class="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+          <span class="text-white font-semibold">K</span>
+        </div> -->
+        <span class="font-semibold text-lg text-gray-900">KTern</span>
+      </div>
+      <!-- <div class="flex justify-center w-full" *ngIf="sidebarCollapsed">
+        <div class="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+          <span class="text-white font-semibold">K</span>
+        </div>
+      </div> -->
+      <button 
+        nz-button 
+        nzType="text" 
+        nzSize="small"
+        (click)="toggleSidebar()"
+        class="transition-fast"
+      >
+        <i nz-icon [nzType]="sidebarCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="flex-1 overflow-y-auto py-4">
+      <ul nz-menu nzMode="inline" nzTheme="light">
+        <li 
+          *ngFor="let item of filteredNavItems"
+          nz-menu-item
+          [nzSelected]="isRouteActive(item.route)"
+          (click)="navigateTo(item.route)"
+          class="cursor-pointer"
+        >
+          <i nz-icon [nzType]="item.icon" class="mr-3"></i>
+          <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- User Section -->
+    <div class="border-t p-4">
+      <div class="flex items-center gap-3">
+        <nz-avatar nzSize="small" nzText="JD" class="bg-primary"></nz-avatar>
+        <div class="flex-1 min-w-0" *ngIf="!sidebarCollapsed">
+          <div class="text-sm font-medium text-gray-900 truncate">John Doe</div>
+          <nz-tag [nzColor]="getRoleColor(userRole)" nzSize="small" class="mt-1">
+            {{ userRole }}
+          </nz-tag>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.main-content-collapsed]="sidebarCollapsed" [class.main-content-expanded]="!sidebarCollapsed">
+    <!-- Header -->
+    <div class="app-header d-none">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-4">
+          <h1 class="text-xl font-semibold text-gray-900 m-0">Digital Maps</h1>
+          <nz-divider nzType="vertical" class="h-6"></nz-divider>
+          <div class="flex items-center gap-2">
+            <button nz-button nzType="default" nzSize="small">
+              <i nz-icon nzType="filter" class="mr-1"></i>
+              Filter
+            </button>
+            <button nz-button nzType="default" nzSize="small">
+              <i nz-icon nzType="share-alt" class="mr-1"></i>
+              Share
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <nz-input-group nzPrefixIcon="search" class="w-64">
+            <input 
+              type="text" 
+              nz-input 
+              placeholder="Search maps, processes..."
+              [(ngModel)]="searchTerm"
+            />
+          </nz-input-group>
+          <button nz-button nzType="text" nzSize="small" nzShape="circle">
+            <i nz-icon nzType="bell"></i>
+          </button>
+          <button nz-button nzType="text" nzSize="small" nzShape="circle">
+            <i nz-icon nzType="setting"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

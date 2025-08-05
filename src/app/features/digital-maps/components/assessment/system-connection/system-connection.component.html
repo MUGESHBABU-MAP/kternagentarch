@@ -1,0 +1,166 @@
+<div class="assessment-step-container">
+  <nz-card class="step-card" nzTitle="System Connection Configuration">
+    <div class="step-content">
+      <div class="step-description">
+        <p>Configure your SAP system connection settings to enable the assessment process. This step establishes the connection to your SAP environment for data collection and analysis.</p>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Connection Type Selection -->
+      <div class="form-section">
+        <h3 class="section-title">Connection Type</h3>
+        <nz-radio-group [(ngModel)]="connectionType" (ngModelChange)="onConnectionTypeChange()">
+          <label nz-radio nzValue="direct">
+            <div class="radio-option">
+              <div class="radio-content">
+                <strong>Direct Connection</strong>
+                <p>Connect directly to your SAP system using system credentials</p>
+              </div>
+            </div>
+          </label>
+          <label nz-radio nzValue="vpn">
+            <div class="radio-option">
+              <div class="radio-content">
+                <strong>VPN Connection</strong>
+                <p>Connect through a secure VPN tunnel</p>
+              </div>
+            </div>
+          </label>
+          <label nz-radio nzValue="ipsec">
+            <div class="radio-option">
+              <div class="radio-content">
+                <strong>IPSec Connection</strong>
+                <p>Connect using IPSec secure connection</p>
+              </div>
+            </div>
+          </label>
+        </nz-radio-group>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <!-- Connection Form -->
+      <div class="form-section" *ngIf="connectionType">
+        <h3 class="section-title">Connection Details</h3>
+        
+        <form nz-form [formGroup]="connectionForm" class="connection-form">
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>System Host</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter the system host">
+                  <input nz-input formControlName="host" placeholder="Enter SAP system host" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>Port</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter the port number">
+                  <nz-input-number formControlName="port" [nzMin]="1" [nzMax]="65535" nzPlaceHolder="3300"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>Client</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter the client number">
+                  <input nz-input formControlName="client" placeholder="100" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>System ID</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter the system ID">
+                  <input nz-input formControlName="systemId" placeholder="DEV" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>Username</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter your username">
+                  <input nz-input formControlName="username" placeholder="Enter username" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>Password</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter your password">
+                  <input nz-input formControlName="password" type="password" placeholder="Enter password" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Connection Status -->
+      <div class="connection-status" *ngIf="connectionStatus">
+        <nz-alert 
+          [nzType]="connectionStatus.type" 
+          [nzMessage]="connectionStatus.message"
+          [nzDescription]="connectionStatus.description"
+          nzShowIcon>
+        </nz-alert>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="step-actions">
+      <button 
+        nz-button 
+        nzType="default" 
+        (click)="testConnection()"
+        [nzLoading]="isTestingConnection"
+        [disabled]="!connectionForm.valid"
+      >
+        <i nz-icon nzType="api"></i>
+        Test Connection
+      </button>
+      
+      <button 
+        nz-button 
+        nzType="primary" 
+        (click)="saveAndContinue()"
+        [disabled]="!isConnectionValid"
+      >
+        Save & Continue
+        <i nz-icon nzType="arrow-right"></i>
+      </button>
+    </div>
+  </nz-card>
+
+  <!-- Help Section -->
+  <nz-card class="help-card" nzTitle="Need Help?" nzSize="small">
+    <div class="help-content">
+      <nz-collapse>
+        <nz-collapse-panel nzHeader="Connection Requirements" nzActive="false">
+          <ul>
+            <li>Ensure your SAP system is accessible from this network</li>
+            <li>Verify that the SAP GUI is installed and configured</li>
+            <li>Check firewall settings for the specified port</li>
+            <li>Confirm user credentials have appropriate permissions</li>
+          </ul>
+        </nz-collapse-panel>
+        <nz-collapse-panel nzHeader="Common Issues" nzActive="false">
+          <ul>
+            <li><strong>Connection Timeout:</strong> Check network connectivity and firewall settings</li>
+            <li><strong>Authentication Failed:</strong> Verify username and password</li>
+            <li><strong>Client Not Found:</strong> Ensure the client number is correct</li>
+            <li><strong>System Unavailable:</strong> Contact your SAP administrator</li>
+          </ul>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </div>
+  </nz-card>
+</div>

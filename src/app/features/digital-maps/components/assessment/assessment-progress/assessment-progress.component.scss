@@ -1,0 +1,991 @@
+// Minimalistic Apple-style Assessment Progress Component
+.assessment-progress-container {
+  padding: 24px;
+  background: #fafafa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// Top Actions - Clean and Simple
+.navigation-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  .actions-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    button {
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      
+      &.ant-btn-default {
+        background: white;
+        border: 1px solid #d9d9d9;
+        
+        &:hover {
+          border-color: #ff4d4f;
+          color: #ff4d4f;
+        }
+        
+        &:disabled {
+          background: #f5f5f5;
+          color: #bfbfbf;
+          border-color: #d9d9d9;
+        }
+      }
+      
+      &.ant-btn-primary {
+        background: #1890ff;
+        border-color: #1890ff;
+        
+        &:hover {
+          background: #40a9ff;
+          border-color: #40a9ff;
+        }
+        
+        &:disabled {
+          background: #f5f5f5;
+          color: #bfbfbf;
+        }
+      }
+    }
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 12px;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Compact Progress Header
+.compact-progress-header {
+  margin-bottom: 24px;
+  
+  .progress-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    .summary-left {
+      flex: 1;
+      
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #262626;
+        margin: 0 0 4px 0;
+      }
+      
+      .progress-status {
+        font-size: 14px;
+        color: #595959;
+      }
+    }
+    
+    .summary-right {
+      width: 200px;
+      margin-left: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 16px;
+      
+      .summary-right {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.overall-progress {
+  .progress-info {
+    margin-bottom: 16px;
+    text-align: center;
+    
+    h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1890ff;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #595959;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+  
+  .progress-bar {
+    :host ::ng-deep .ant-progress {
+      .ant-progress-text {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Compact Categories Progress - Clean Table Style
+.compact-categories-progress {
+  margin-bottom: 24px;
+  
+  :host ::ng-deep .ant-table {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 600;
+      color: #262626;
+      font-size: 13px;
+      padding: 12px 16px;
+      
+      &:first-child {
+        border-top-left-radius: 12px;
+      }
+      
+      &:last-child {
+        border-top-right-radius: 12px;
+      }
+    }
+    
+    .ant-table-tbody > tr {
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: #f8f9fa;
+      }
+      
+      &.completed {
+        background: rgba(82, 196, 26, 0.02);
+        border-left: 3px solid #52c41a;
+      }
+      
+      &.running {
+        background: rgba(24, 144, 255, 0.02);
+        border-left: 3px solid #1890ff;
+      }
+      
+      &.failed {
+        background: rgba(255, 77, 79, 0.02);
+        border-left: 3px solid #ff4d4f;
+      }
+      
+      > td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f5f5f5;
+        font-size: 13px;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  
+  .category-info {
+    display: flex;
+    align-items: center;
+    
+    .category-icon {
+      margin-right: 8px;
+      font-size: 16px;
+      color: #1890ff;
+    }
+  }
+  
+  .progress-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    :host ::ng-deep .ant-progress {
+      flex: 1;
+      margin: 0;
+    }
+    
+    .progress-text {
+      font-size: 12px;
+      color: #595959;
+      font-weight: 500;
+      min-width: 35px;
+    }
+  }
+  
+  .current-task {
+    font-size: 12px;
+    color: #595959;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Status Tag Styling - Force override with !important
+:host ::ng-deep .ant-tag {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  border: 1px solid !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  
+  // Blue (Running) status
+  &.ant-tag-blue {
+    background: #e6f7ff !important;
+    color: #1890ff !important;
+    border-color: #91d5ff !important;
+  }
+  
+  // Green (Completed) status
+  &.ant-tag-green {
+    background: #f6ffed !important;
+    color: #52c41a !important;
+    border-color: #b7eb8f !important;
+  }
+  
+  // Red (Failed) status
+  &.ant-tag-red {
+    background: #fff2f0 !important;
+    color: #ff4d4f !important;
+    border-color: #ffccc7 !important;
+  }
+  
+  // Gold (Pending) status
+  &.ant-tag-gold {
+    background: #fffbe6 !important;
+    color: #faad14 !important;
+    border-color: #ffe58f !important;
+  }
+  
+  // Default status
+  &.ant-tag-default {
+    background: #fafafa !important;
+    color: #595959 !important;
+    border-color: #d9d9d9 !important;
+  }
+  
+  // Alternative attribute-based selectors
+  &[nz-color="blue"] {
+    background: #e6f7ff !important;
+    color: #1890ff !important;
+    border-color: #91d5ff !important;
+  }
+  
+  &[nz-color="green"] {
+    background: #f6ffed !important;
+    color: #52c41a !important;
+    border-color: #b7eb8f !important;
+  }
+  
+  &[nz-color="red"] {
+    background: #fff2f0 !important;
+    color: #ff4d4f !important;
+    border-color: #ffccc7 !important;
+  }
+  
+  &[nz-color="gold"] {
+    background: #fffbe6 !important;
+    color: #faad14 !important;
+    border-color: #ffe58f !important;
+  }
+  
+  &[nz-color="default"] {
+    background: #fafafa !important;
+    color: #595959 !important;
+    border-color: #d9d9d9 !important;
+  }
+  
+  // Legacy support for old color names
+  &.ant-tag-processing,
+  &[nz-color="processing"] {
+    background: #e6f7ff !important;
+    color: #1890ff !important;
+    border-color: #91d5ff !important;
+  }
+  
+  &.ant-tag-success,
+  &[nz-color="success"] {
+    background: #f6ffed !important;
+    color: #52c41a !important;
+    border-color: #b7eb8f !important;
+  }
+  
+  &.ant-tag-error,
+  &[nz-color="error"] {
+    background: #fff2f0 !important;
+    color: #ff4d4f !important;
+    border-color: #ffccc7 !important;
+  }
+  
+  &.ant-tag-warning,
+  &[nz-color="warning"] {
+    background: #fffbe6 !important;
+    color: #faad14 !important;
+    border-color: #ffe58f !important;
+  }
+  
+  // Icon styling within tags
+  .anticon {
+    font-size: 12px !important;
+  }
+}
+
+// Additional fallback for table cell tags
+.compact-categories-progress {
+  :host ::ng-deep td .ant-tag {
+    min-width: 80px !important;
+    text-align: center !important;
+    
+    &.ant-tag-blue,
+    &[nz-color="blue"] {
+      background: #e6f7ff !important;
+      color: #1890ff !important;
+      border-color: #91d5ff !important;
+    }
+    
+    &.ant-tag-green,
+    &[nz-color="green"] {
+      background: #f6ffed !important;
+      color: #52c41a !important;
+      border-color: #b7eb8f !important;
+    }
+    
+    &.ant-tag-red,
+    &[nz-color="red"] {
+      background: #fff2f0 !important;
+      color: #ff4d4f !important;
+      border-color: #ffccc7 !important;
+    }
+    
+    &.ant-tag-gold,
+    &[nz-color="gold"] {
+      background: #fffbe6 !important;
+      color: #faad14 !important;
+      border-color: #ffe58f !important;
+    }
+    
+    &.ant-tag-default,
+    &[nz-color="default"] {
+      background: #fafafa !important;
+      color: #595959 !important;
+      border-color: #d9d9d9 !important;
+    }
+  }
+}
+
+.category-status {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .status-icon {
+    margin-right: 12px;
+    
+    i {
+      font-size: 24px;
+      
+      &.pending-icon {
+        color: #faad14;
+      }
+      
+      &.running-icon {
+        color: #1890ff;
+      }
+      
+      &.completed-icon {
+        color: #52c41a;
+      }
+      
+      &.failed-icon {
+        color: #ff4d4f;
+      }
+    }
+  }
+  
+  .status-info {
+    flex: 1;
+    
+    .status-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+      margin-bottom: 4px;
+    }
+    
+    .status-time {
+      font-size: 12px;
+      color: #8c8c8c;
+    }
+  }
+}
+
+.category-progress {
+  margin-bottom: 16px;
+  
+  :host ::ng-deep .ant-progress {
+    .ant-progress-text {
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+.category-details {
+  margin-bottom: 16px;
+  
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #595959;
+    }
+    
+    .detail-value {
+      font-size: 12px;
+      color: #262626;
+      text-align: right;
+      max-width: 60%;
+      word-break: break-word;
+    }
+  }
+}
+
+.category-actions {
+  text-align: center;
+  
+  button {
+    border-radius: 4px;
+  }
+}
+
+// Live Status - Clean Apple Style
+.live-status {
+  margin-bottom: 24px;
+  
+  .status-card {
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    :host ::ng-deep .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      border-radius: 12px 12px 0 0;
+      
+      .ant-card-head-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        
+        &::before {
+          content: '📊';
+          margin-right: 8px;
+        }
+      }
+    }
+    
+    :host ::ng-deep .ant-card-body {
+      padding: 20px;
+    }
+  }
+}
+
+.status-messages {
+  .messages-container {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
+  
+  .status-message {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-left: 3px solid;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &.info {
+      background: #e6f7ff;
+      border-left-color: #1890ff;
+      
+      .message-content i {
+        color: #1890ff;
+      }
+    }
+    
+    &.success {
+      background: #f6ffed;
+      border-left-color: #52c41a;
+      
+      .message-content i {
+        color: #52c41a;
+      }
+    }
+    
+    &.warning {
+      background: #fffbe6;
+      border-left-color: #faad14;
+      
+      .message-content i {
+        color: #faad14;
+      }
+    }
+    
+    &.error {
+      background: #fff2f0;
+      border-left-color: #ff4d4f;
+      
+      .message-content i {
+        color: #ff4d4f;
+      }
+    }
+    
+    .message-time {
+      font-size: 10px;
+      color: #8c8c8c;
+      margin-right: 12px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    
+    .message-content {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      
+      i {
+        margin-right: 6px;
+        margin-top: 1px;
+        font-size: 12px;
+      }
+      
+      span {
+        font-size: 12px;
+        line-height: 1.4;
+        color: #262626;
+      }
+    }
+  }
+  
+  .messages-actions {
+    display: flex;
+    gap: 8px;
+    
+    button {
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  }
+}
+
+// Assessment Summary - Clean Apple Style
+.assessment-summary {
+  margin-bottom: 24px;
+  
+  .summary-card {
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    :host ::ng-deep .ant-card-head {
+      border-bottom: 1px solid #f0f0f0;
+      border-radius: 12px 12px 0 0;
+      
+      .ant-card-head-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        
+        &::before {
+          content: '🎉';
+          margin-right: 8px;
+        }
+      }
+    }
+    
+    :host ::ng-deep .ant-card-body {
+      padding: 20px;
+    }
+  }
+}
+
+.summary-content {
+  .completion-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    
+    .stat-item {
+      text-align: center;
+      
+      .stat-number {
+        display: block;
+        font-size: 24px;
+        font-weight: 700;
+        color: #52c41a;
+        margin-bottom: 4px;
+      }
+      
+      .stat-label {
+        font-size: 12px;
+        color: #8c8c8c;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+    
+    .stat-divider {
+      width: 1px;
+      height: 40px;
+      background: #d9d9d9;
+    }
+    
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 16px;
+      
+      .stat-divider {
+        width: 40px;
+        height: 1px;
+      }
+    }
+  }
+  
+  .completion-message {
+    margin-bottom: 24px;
+    
+    :host ::ng-deep .ant-alert {
+      border-radius: 6px;
+    }
+  }
+  
+  .results-preview {
+    h4 {
+      color: #262626;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      border: 1px solid #f0f0f0;
+      
+      .result-icon {
+        margin-right: 12px;
+        margin-top: 2px;
+        
+        i {
+          font-size: 20px;
+          
+          &.success-icon {
+            color: #52c41a;
+          }
+        }
+      }
+      
+      .result-content {
+        flex: 1;
+        
+        .result-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #262626;
+          margin-bottom: 4px;
+        }
+        
+        .result-summary {
+          font-size: 12px;
+          color: #595959;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+}
+
+// Navigation Actions
+.navigation-actions {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+  
+  .actions-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    
+    button {
+      flex: 1;
+      height: 40px;
+      border-radius: 6px;
+      font-weight: 500;
+      
+      &.ant-btn-default {
+        border-color: #d9d9d9;
+        
+        &:hover {
+          border-color: #ff4d4f;
+          color: #ff4d4f;
+        }
+        
+        &:disabled {
+          background: #f5f5f5;
+          color: #bfbfbf;
+          border-color: #d9d9d9;
+        }
+      }
+      
+      &.ant-btn-primary {
+        background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+        border: none;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+        
+        &:hover {
+          background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+        }
+        
+        &:disabled {
+          background: #f5f5f5;
+          color: #bfbfbf;
+          box-shadow: none;
+        }
+      }
+      
+      i {
+        margin-right: 8px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .category-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .assessment-progress-container {
+    padding: 0 8px;
+  }
+  
+  .categories-grid {
+    gap: 16px;
+  }
+  
+  .category-card {
+    :host ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
+  }
+  
+  .messages-container {
+    max-height: 200px;
+  }
+}
+
+// Animation
+.assessment-progress-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Pulse Animation for Running Status
+.category-progress-card.running {
+  .category-card {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(24, 144, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+  }
+}
+
+// Loading States
+:host ::ng-deep .ant-btn-loading {
+  .anticon {
+    margin-right: 8px;
+  }
+}
+
+// Focus States
+:host ::ng-deep .ant-btn:focus {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+// Progress Bar Animations
+:host ::ng-deep .ant-progress {
+  .ant-progress-bg {
+    transition: width 0.3s ease;
+  }
+}
+
+// Status Message Fade In
+.status-message {
+  animation: fadeInLeft 0.3s ease-out;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Completion Celebration
+.assessment-summary {
+  animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

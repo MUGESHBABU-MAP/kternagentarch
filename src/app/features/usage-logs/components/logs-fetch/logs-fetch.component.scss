@@ -1,0 +1,295 @@
+.logs-fetch-container {
+  padding: 24px;
+
+  .fetch-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .fetch-instructions {
+    margin-bottom: 32px;
+  }
+
+  .fetch-form {
+    .form-section {
+      margin-bottom: 32px;
+      padding: 24px;
+      background: #fafafa;
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+
+      h4 {
+        margin: 0 0 20px 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        border-bottom: 1px solid #e8e8e8;
+        padding-bottom: 8px;
+      }
+
+      nz-form-item {
+        margin-bottom: 16px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      nz-form-label {
+        font-weight: 500;
+        color: #262626;
+      }
+
+      .custom-date-range {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+
+        @media (max-width: 576px) {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    .fetch-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #f0f0f0;
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 16px;
+
+        nz-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .fetch-progress {
+    text-align: center;
+    padding: 40px 24px;
+
+    .progress-content {
+      max-width: 500px;
+      margin: 0 auto;
+
+      .progress-header {
+        margin-bottom: 32px;
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 24px;
+          font-weight: 600;
+          color: #262626;
+        }
+
+        p {
+          margin: 0;
+          color: #8c8c8c;
+          font-size: 16px;
+        }
+      }
+
+      .progress-details {
+        margin-bottom: 32px;
+
+        .progress-message {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 16px;
+          color: #595959;
+          font-size: 14px;
+
+          i {
+            color: #1890ff;
+          }
+        }
+      }
+
+      .progress-actions {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+
+  .fetch-error {
+    .error-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #f0f0f0;
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 16px;
+
+        nz-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Global overrides for this component
+:host {
+  ::ng-deep {
+    .ant-form-item-label {
+      font-weight: 500;
+    }
+
+    .ant-select {
+      width: 100%;
+    }
+
+    .ant-checkbox-wrapper {
+      font-size: 14px;
+      color: #595959;
+      line-height: 1.5;
+    }
+
+    .ant-input-number {
+      width: 100%;
+    }
+
+    .ant-alert {
+      border-radius: 6px;
+    }
+
+    .ant-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 6px;
+      font-weight: 500;
+
+      &.ant-btn-primary {
+        background: #1890ff;
+        border-color: #1890ff;
+
+        &:hover {
+          background: #40a9ff;
+          border-color: #40a9ff;
+        }
+      }
+
+      &.ant-btn-danger {
+        &:hover {
+          background: #ff7875;
+          border-color: #ff7875;
+        }
+      }
+    }
+
+    .ant-progress {
+      .ant-progress-text {
+        font-weight: 500;
+      }
+    }
+
+    .ant-form-explain {
+      font-size: 12px;
+      color: #8c8c8c;
+      margin-top: 4px;
+    }
+
+    .ant-date-picker {
+      width: 100%;
+    }
+
+    .ant-select-multiple {
+      .ant-select-selection {
+        min-height: 40px;
+      }
+    }
+  }
+}
+
+// Button styles
+.btn-default {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    color: #40a9ff;
+    border-color: #40a9ff;
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    background: #40a9ff;
+    border-color: #40a9ff;
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}
+
+.btn-danger {
+  background: #ff4d4f;
+  border: 1px solid #ff4d4f;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    background: #ff7875;
+    border-color: #ff7875;
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    border-color: #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}

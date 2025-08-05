@@ -1,0 +1,743 @@
+// Enterprise Assessment Component Styles
+.assessment-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Enterprise Assessment Header
+.assessment-header {
+  margin-bottom: 24px;
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border-bottom: 3px solid var(--secondary-color);
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+  }
+  
+  .header-left {
+    .assessment-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .title-icon {
+        font-size: 28px;
+      }
+      
+      @media (max-width: 768px) {
+        font-size: 22px;
+        justify-content: center;
+      }
+    }
+    
+    .assessment-subtitle {
+      font-size: 14px;
+      margin: 0;
+      opacity: 0.9;
+      font-weight: 400;
+      
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+    }
+  }
+  
+  .header-right {
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .progress-text {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      
+      .progress-bar {
+        width: 200px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+        
+        @media (max-width: 768px) {
+          width: 160px;
+        }
+        
+        .progress-fill {
+          height: 100%;
+          background: white;
+          transition: width 0.3s ease;
+        }
+      }
+      
+      .progress-percentage {
+        font-size: 14px;
+        font-weight: 600;
+        min-width: 40px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+// Enterprise System Connection Panel
+.system-connection-panel {
+  margin-bottom: 24px;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  
+  .connection-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    
+    .connection-status {
+      flex-shrink: 0;
+    }
+    
+    .system-info {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+      
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        .info-label {
+          font-weight: 500;
+          color: var(--text-secondary);
+          min-width: 80px;
+        }
+        
+        .info-value {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .connection-actions {
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Enterprise Steps Navigation
+.steps-navigation {
+  margin-bottom: 24px;
+  
+  .steps-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: var(--background-primary);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+  }
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex: 1;
+  max-width: 200px;
+  
+  @media (max-width: 1024px) {
+    flex-direction: row;
+    max-width: none;
+    width: 100%;
+    align-items: flex-start;
+  }
+  
+  &:hover {
+    .step-circle {
+      border-color: var(--accent-color);
+    }
+  }
+  
+  &.step-active {
+    .step-circle {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .step-name {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .step-connector {
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--border-color) 100%);
+    }
+  }
+  
+  &.step-completed {
+    .step-circle {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+    
+    .step-name {
+      color: var(--success-color);
+      font-weight: 500;
+    }
+    
+    .step-connector {
+      background: var(--success-color);
+    }
+  }
+  
+  &.step-inactive {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &:hover {
+      .step-circle {
+        border-color: var(--border-color);
+      }
+    }
+  }
+}
+
+.step-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  @media (max-width: 1024px) {
+    margin-bottom: 0;
+    margin-right: 16px;
+  }
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--background-tertiary);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
+  
+  .step-icon {
+    font-size: 16px;
+  }
+  
+  .step-number {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.step-connector {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  right: -50%;
+  height: 2px;
+  background: var(--border-color);
+  transform: translateY(-50%);
+  z-index: 1;
+  transition: background 0.2s ease;
+  
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+.step-content {
+  text-align: center;
+  
+  @media (max-width: 1024px) {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .step-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .step-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    max-width: 160px;
+    
+    @media (max-width: 1024px) {
+      max-width: none;
+    }
+  }
+}
+
+// Enterprise Step Content Area
+.step-content-area {
+  .step-card {
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    background: var(--background-primary);
+    
+    :host ::ng-deep .ant-card-body {
+      padding: 0;
+    }
+  }
+}
+
+.step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--background-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  
+  @media (max-width: 768px) {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .step-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .step-title-icon {
+      font-size: 20px;
+      color: var(--accent-color);
+    }
+  }
+  
+  .step-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    
+    button {
+      min-width: 80px;
+      max-width: 120px;
+      white-space: nowrap;
+    }
+  }
+}
+
+.step-body {
+  padding: 24px;
+  min-height: 300px;
+  background: var(--background-primary);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.step-navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: var(--background-tertiary);
+  border-top: 1px solid var(--border-color);
+  
+  @media (max-width: 768px) {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .nav-button {
+    min-width: 120px;
+    height: 36px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    
+    &.ant-btn-primary {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+      
+      &:hover {
+        background: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+    }
+    
+    &.ant-btn-default {
+      background: var(--background-primary);
+      color: var(--text-primary);
+      
+      &:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Enterprise Progress Styles
+.compact-progress-header {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  
+  .progress-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    
+    .summary-left {
+      flex: 1;
+      
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      
+      .progress-status {
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+    }
+    
+    .summary-right {
+      flex-shrink: 0;
+      min-width: 200px;
+      
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.compact-categories-progress {
+  margin-bottom: 24px;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  
+  .category-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .category-icon {
+      color: var(--accent-color);
+    }
+  }
+  
+  .progress-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .progress-text {
+      font-size: 12px;
+      font-weight: 500;
+      min-width: 40px;
+    }
+  }
+  
+  .current-task {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  :host ::ng-deep .ant-table {
+    .ant-table-thead > tr > th {
+      background: var(--background-tertiary);
+      border-bottom: 2px solid var(--border-color);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .ant-table-tbody > tr {
+      &.completed {
+        background-color: rgba(39, 174, 96, 0.05);
+      }
+      
+      &.running {
+        background-color: rgba(52, 152, 219, 0.05);
+      }
+      
+      &.failed {
+        background-color: rgba(231, 76, 60, 0.05);
+      }
+      
+      &:hover > td {
+        background: var(--background-secondary);
+      }
+    }
+  }
+}
+
+// Enterprise Data Sections
+.enterprise-section {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+  
+  .section-header {
+    background: var(--background-tertiary);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .section-title {
+      font-size: 16px;
+    }
+    
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+  
+  .section-body {
+    padding: 24px;
+  }
+}
+
+// Status indicators
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  
+  &.success {
+    color: var(--success-color);
+    
+    .status-dot {
+      background: var(--success-color);
+    }
+  }
+  
+  &.warning {
+    color: var(--warning-color);
+    
+    .status-dot {
+      background: var(--warning-color);
+    }
+  }
+  
+  &.error {
+    color: var(--error-color);
+    
+    .status-dot {
+      background: var(--error-color);
+    }
+  }
+  
+  &.info {
+    color: var(--accent-color);
+    
+    .status-dot {
+      background: var(--accent-color);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 576px) {
+  .assessment-container {
+    padding: 16px;
+  }
+  
+  .assessment-header .header-content {
+    padding: 16px 20px;
+  }
+  
+  .steps-navigation .steps-container {
+    padding: 16px;
+  }
+  
+  .step-body {
+    padding: 16px;
+  }
+  
+  .step-navigation-buttons {
+    padding: 16px;
+  }
+}
+
+// Focus States
+.step-item:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+// Loading States
+.step-body {
+  position: relative;
+  
+  &.loading {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+  }
+}
+
+// Enterprise form styling
+.enterprise-form {
+  .form-section {
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+  }
+}
+
+// Metric cards
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  .metric-card {
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    text-align: center;
+    
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}

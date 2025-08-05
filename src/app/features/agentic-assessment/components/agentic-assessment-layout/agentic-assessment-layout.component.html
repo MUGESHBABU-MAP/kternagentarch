@@ -1,0 +1,59 @@
+<div class="agentic-layout">
+  <!-- Header -->
+  <header class="agentic-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo-section">
+          <div class="logo-avatar">🤖</div>
+          <div class="title-section">
+            <h1>Agentic Assessment Platform</h1>
+            <span class="subtitle">AI-Powered SAP System Analysis</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <nav class="breadcrumb">
+          <span>Digital Maps</span>
+          <span> > </span>
+          <span>Agentic Assessment</span>
+        </nav>
+        
+        <div class="header-actions">
+          <button class="btn-classic" routerLink="/digital-maps/assessment">
+            ← Classic View
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav-header">
+    <div class="nav-content">
+      <ul class="nav-menu">
+        <li>
+          <a routerLink="orchestration" routerLinkActive="active">
+            🔧 Agent Orchestration
+          </a>
+        </li>
+        <li>
+          <a routerLink="dashboard" routerLinkActive="active">
+            📊 Agent Dashboard
+          </a>
+        </li>
+      </ul>
+      
+      <div class="nav-status">
+        <span class="status-badge">🟢 System Active</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="agentic-content">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

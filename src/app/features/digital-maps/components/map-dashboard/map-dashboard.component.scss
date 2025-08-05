@@ -1,0 +1,175 @@
+// Component-specific styles for map dashboard
+// Most styling is handled by utility classes in the global styles
+
+// Line clamp utility for description text
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Custom table hover effects
+:host ::ng-deep .ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+// Radio button group styling
+:host ::ng-deep .ant-radio-group-button {
+  .ant-radio-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    
+    &:hover {
+      color: #1890ff;
+    }
+    
+    &.ant-radio-button-wrapper-checked {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: white;
+      
+      &:hover {
+        background: #40a9ff;
+        border-color: #40a9ff;
+      }
+    }
+  }
+}
+
+// Card grid responsive adjustments
+@media (max-width: 1024px) {
+  :host ::ng-deep .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .p-6 {
+    padding: 16px;
+  }
+  
+  .text-3xl {
+    font-size: 24px;
+  }
+  
+  .w-80 {
+    width: 100%;
+  }
+  
+  .w-48 {
+    width: 120px;
+  }
+  
+  .flex.justify-between.items-center {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .flex.items-center.gap-4 {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+// Empty state styling
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+// Button hover effects
+:host ::ng-deep .ant-btn {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// Card action buttons
+:host ::ng-deep .ant-card {
+  .ant-btn-text {
+    padding: 4px 8px;
+    height: auto;
+    font-size: 12px;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+    
+    &.ant-btn-dangerous:hover {
+      background-color: rgba(255, 77, 79, 0.1);
+      color: #ff4d4f;
+    }
+  }
+}
+
+// Table action buttons
+:host ::ng-deep .ant-table {
+  .ant-btn-text {
+    padding: 4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+    
+    &.ant-btn-dangerous:hover {
+      background-color: rgba(255, 77, 79, 0.1);
+      color: #ff4d4f;
+    }
+  }
+}
+
+// Select dropdown styling
+:host ::ng-deep .ant-select {
+  .ant-select-selector {
+    border-radius: 6px;
+  }
+}
+
+// Tag styling
+:host ::ng-deep .ant-tag {
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 2px 8px;
+  margin: 0;
+}
+
+// Avatar styling
+:host ::ng-deep .ant-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+// Input group styling
+:host ::ng-deep .ant-input-group {
+  .ant-input {
+    border-radius: 6px;
+  }
+  
+  .ant-input-group-addon {
+    border-radius: 6px 0 0 6px;
+  }
+}

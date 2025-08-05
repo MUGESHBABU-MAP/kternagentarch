@@ -1,0 +1,178 @@
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>🎯 Agent Dashboard</h1>
+        <p>Monitor and analyze the performance of your AI agents in real-time</p>
+      </div>
+      
+      <div class="header-stats">
+        <div class="stat-card active">
+          <div class="stat-value">{{ getSystemOverview().activeAgents }}</div>
+          <div class="stat-label">⚡ Active</div>
+        </div>
+        <div class="stat-card completed">
+          <div class="stat-value">{{ getSystemOverview().completedAgents }}</div>
+          <div class="stat-label">✅ Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ getSystemOverview().totalTasks }}</div>
+          <div class="stat-label">🎯 Tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ getSystemOverview().averageSuccessRate }}%</div>
+          <div class="stat-label">📊 Success</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- System Overview -->
+    <div class="overview-section">
+      <div class="overview-card">
+        <div class="card-header">
+          <h3>📈 System Overview</h3>
+        </div>
+        <div class="overview-metrics">
+          <div class="metric-group">
+            <div class="metric-title">Total Agents</div>
+            <div class="metric-value">{{ getSystemOverview().totalAgents }}</div>
+          </div>
+          <div class="metric-group">
+            <div class="metric-title">Tasks Completed</div>
+            <div class="metric-value">{{ getSystemOverview().totalTasks }}</div>
+          </div>
+          <div class="metric-group">
+            <div class="metric-title">Success Rate</div>
+            <div class="metric-value">{{ getSystemOverview().averageSuccessRate }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agents Status -->
+    <div class="agents-status-section">
+      <div class="agents-status-card">
+        <div class="card-header">
+          <h3>🤖 Agent Status</h3>
+        </div>
+        <div class="agents-status-grid">
+          <div 
+            *ngFor="let agent of agents; trackBy: trackByAgentId"
+            class="agent-status-item"
+            [class]="'status-' + agent.status">
+            
+            <div class="agent-avatar" [style.background-color]="agent.color">
+              {{ agent.avatar }}
+            </div>
+            
+            <div class="agent-details">
+              <div class="agent-name">{{ agent.name }}</div>
+              <div class="agent-status">{{ agent.status | titlecase }}</div>
+            </div>
+            
+            <div class="agent-metrics">
+              <div class="metric">
+                <span class="metric-value">{{ agent.metrics.tasksCompleted }}</span>
+                <span class="metric-label">Tasks</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value">{{ agent.metrics.successRate }}%</span>
+                <span class="metric-label">Success</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-section">
+      <div class="activity-card">
+        <div class="card-header">
+          <h3>📋 Recent Activity</h3>
+        </div>
+        <div class="activity-list">
+          <div 
+            *ngFor="let message of getRecentMessages(); trackBy: trackByMessageId"
+            class="activity-item">
+            
+            <div class="activity-icon">
+              <span [style.color]="message.type === 'success' ? '#52c41a' : message.type === 'error' ? '#f5222d' : '#1890ff'">
+                {{ message.type === 'success' ? '✅' : message.type === 'error' ? '❌' : 'ℹ️' }}
+              </span>
+            </div>
+            
+            <div class="activity-content">
+              <div class="activity-header">
+                <span class="agent-name">
+                  {{ getAgentNameById(message.agentId) }}
+                </span>
+                <span class="activity-time">{{ message.timestamp | date:'HH:mm:ss' }}</span>
+              </div>
+              <div class="activity-message">{{ message.message }}</div>
+            </div>
+          </div>
+          
+          <div class="no-activity" *ngIf="messages.length === 0">
+            <div class="empty-state">
+              <div class="empty-icon">📭</div>
+              <p>No recent activity</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Performance Chart -->
+    <div class="performance-section">
+      <div class="performance-card">
+        <div class="card-header">
+          <h3>📊 Agent Performance</h3>
+        </div>
+        <div class="performance-chart">
+          <div class="chart-placeholder">
+            <div class="chart-bars">
+              <div 
+                *ngFor="let agent of agents; trackBy: trackByAgentId"
+                class="chart-bar"
+                [style.height.%]="agent.metrics.successRate"
+                [style.background-color]="agent.color">
+                <div class="bar-label">{{ agent.name.split(' ')[0] }}</div>
+                <div class="bar-value">{{ agent.metrics.successRate }}%</div>
+              </div>
+            </div>
+            <div class="chart-axis">
+              <span>Success Rate by Agent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+      <div class="actions-card">
+        <div class="card-header">
+          <h3>⚡ Quick Actions</h3>
+        </div>
+        <div class="action-buttons">
+          <button class="action-button btn-primary" routerLink="../orchestration">
+            🚀 <span>Start New Assessment</span>
+          </button>
+          
+          <button class="action-button btn-secondary">
+            📊 <span>Export Reports</span>
+          </button>
+          
+          <button class="action-button btn-secondary">
+            🔄 <span>Refresh Data</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

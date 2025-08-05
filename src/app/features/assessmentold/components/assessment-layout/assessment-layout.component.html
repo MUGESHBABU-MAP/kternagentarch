@@ -1,0 +1,111 @@
+<nz-layout class="layout">
+  <!-- Sidebar -->
+  <nz-sider 
+    class="sidebar"
+    [nzCollapsed]="isCollapsed"
+    [nzWidth]="260"
+    [nzCollapsedWidth]="64"
+    nzTheme="light"
+  >
+    <div class="sidebar-header">
+      <div class="logo" [class.collapsed]="isCollapsed">
+        <i nz-icon nzType="audit" class="logo-icon"></i>
+        <span class="logo-text" *ngIf="!isCollapsed">Assessment</span>
+      </div>
+    </div>
+
+    <ul nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed" class="sidebar-menu">
+      <!-- Assessment Steps -->
+      <li nz-menu-item 
+        *ngFor="let step of wizardSteps; let i = index"
+        [nzSelected]="i === currentStepIndex"
+        (click)="navigateToStep(step.route)"
+        class="menu-item"
+      >
+        <div class="menu-item-content">
+          <div class="step-indicator">
+            <div class="step-circle" [class]="getStepCircleClass(i)">
+              <i *ngIf="step.completed" nz-icon nzType="check" class="step-icon"></i>
+              <span *ngIf="!step.completed" class="step-number">{{ i + 1 }}</span>
+            </div>
+          </div>
+          <div class="step-info" *ngIf="!isCollapsed">
+            <div class="step-name" [class]="getStepTextClass(i)">{{ step.name }}</div>
+            <div class="step-description">{{ step.description }}</div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Progress Section -->
+    <div class="sidebar-footer" *ngIf="!isCollapsed">
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-title">Overall Progress</span>
+          <span class="progress-percentage">{{ getOverallProgress() | number:'1.0-0' }}%</span>
+        </div>
+        <nz-progress 
+          [nzPercent]="getOverallProgress()" 
+          nzSize="small" 
+          [nzShowInfo]="false"
+          nzStrokeColor="#1890ff"
+        ></nz-progress>
+        <div class="progress-info">
+          <span class="progress-text">Step {{ currentStepIndex + 1 }} of {{ wizardSteps.length }}</span>
+        </div>
+      </div>
+    </div>
+  </nz-sider>
+
+  <!-- Main Content -->
+  <nz-layout class="main-layout">
+    <!-- Header -->
+    <nz-header class="header">
+      <div class="header-left">
+        <button 
+          nz-button 
+          nzType="text" 
+          nzSize="large"
+          (click)="toggleSidebar()"
+          class="collapse-btn"
+        >
+          <i nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+        </button>
+        <div class="header-title">
+          <h1 class="page-title">{{ getCurrentStepTitle() }}</h1>
+          <p class="page-subtitle">{{ getCurrentStepDescription() }}</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-actions">
+          <button 
+            nz-button 
+            nzType="default" 
+            nzSize="small"
+            (click)="resetAssessment()"
+            class="reset-btn"
+          >
+            <i nz-icon nzType="reload" class="mr-1"></i>
+            Reset Assessment
+          </button>
+          <button 
+            nz-button 
+            nzType="primary" 
+            nzSize="small"
+            (click)="backToDigitalMaps()"
+          >
+            <i nz-icon nzType="arrow-left" class="mr-1"></i>
+            Back to Digital Maps
+          </button>
+        </div>
+      </div>
+    </nz-header>
+
+    <!-- Content -->
+    <nz-content class="content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

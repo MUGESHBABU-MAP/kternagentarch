@@ -1,0 +1,551 @@
+.dashboard-container {
+  background: #fff;
+  
+  // Dashboard Header
+  .dashboard-header {
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 24px;
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      @media (max-width: 1024px) {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+      }
+      
+      .header-text {
+        h1 {
+          font-size: 24px;
+          font-weight: 600;
+          color: #262626;
+          margin: 0 0 8px 0;
+          
+          @media (max-width: 768px) {
+            font-size: 20px;
+          }
+        }
+        
+        p {
+          font-size: 14px;
+          color: #8c8c8c;
+          margin: 0;
+          line-height: 1.5;
+        }
+      }
+      
+      .header-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        
+        @media (max-width: 640px) {
+          grid-template-columns: repeat(2, 1fr);
+          width: 100%;
+        }
+        
+        .stat-card {
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 6px;
+          padding: 16px;
+          text-align: center;
+          min-width: 100px;
+          
+          &.active {
+            border-color: #1890ff;
+            background: #e6f7ff;
+          }
+          
+          &.completed {
+            border-color: #52c41a;
+            background: #f6ffed;
+          }
+          
+          .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #262626;
+            margin-bottom: 4px;
+            
+            @media (max-width: 640px) {
+              font-size: 18px;
+            }
+          }
+          
+          .stat-label {
+            font-size: 11px;
+            color: #8c8c8c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+    }
+  }
+  
+  // Dashboard Grid
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    // Grid Item Layouts
+    .overview-section {
+      grid-column: span 12;
+    }
+    
+    .agents-status-section {
+      grid-column: span 8;
+      
+      @media (max-width: 1024px) {
+        grid-column: span 12;
+      }
+    }
+    
+    .activity-section {
+      grid-column: span 4;
+      
+      @media (max-width: 1024px) {
+        grid-column: span 12;
+      }
+    }
+    
+    .performance-section {
+      grid-column: span 8;
+      
+      @media (max-width: 1024px) {
+        grid-column: span 12;
+      }
+    }
+    
+    .actions-section {
+      grid-column: span 4;
+      
+      @media (max-width: 1024px) {
+        grid-column: span 12;
+      }
+    }
+  }
+  
+  // Card Styling
+  .overview-card,
+  .agents-status-card,
+  .activity-card,
+  .performance-card,
+  .actions-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    
+    .card-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #262626;
+        margin: 0;
+      }
+    }
+  }
+  
+  // Overview Section
+  .overview-metrics {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
+    
+    .metric-group {
+      text-align: center;
+      padding: 20px;
+      background: #fafafa;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
+      
+      .metric-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #8c8c8c;
+        margin-bottom: 8px;
+      }
+      
+      .metric-value {
+        font-size: 28px;
+        font-weight: 600;
+        color: #262626;
+        
+        @media (max-width: 640px) {
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  
+  // Agents Status Section
+  .agents-status-grid {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      padding: 16px;
+    }
+    
+    .agent-status-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
+      
+      &.status-running,
+      &.status-processing {
+        border-color: #1890ff;
+        background: #e6f7ff;
+      }
+      
+      &.status-completed {
+        border-color: #52c41a;
+        background: #f6ffed;
+      }
+      
+      &.status-error {
+        border-color: #ff4d4f;
+        background: #fff2f0;
+      }
+      
+      .agent-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: white;
+        font-weight: 600;
+      }
+      
+      .agent-details {
+        flex: 1;
+        min-width: 0;
+        
+        .agent-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: #262626;
+          margin-bottom: 2px;
+        }
+        
+        .agent-status {
+          font-size: 12px;
+          color: #8c8c8c;
+        }
+      }
+      
+      .agent-metrics {
+        display: flex;
+        gap: 16px;
+        
+        .metric {
+          text-align: center;
+          
+          .metric-value {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #262626;
+            line-height: 1;
+          }
+          
+          .metric-label {
+            display: block;
+            font-size: 10px;
+            color: #8c8c8c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+  }
+  
+  // Activity Section
+  .activity-list {
+    padding: 16px 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f5f5f5;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .activity-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      
+      .activity-content {
+        flex: 1;
+        min-width: 0;
+        
+        .activity-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 4px;
+          
+          .agent-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #595959;
+          }
+          
+          .activity-time {
+            font-size: 11px;
+            color: #bfbfbf;
+            font-family: 'Courier New', monospace;
+          }
+        }
+        
+        .activity-message {
+          font-size: 13px;
+          color: #262626;
+          line-height: 1.4;
+        }
+      }
+    }
+    
+    .no-activity {
+      padding: 40px 20px;
+      text-align: center;
+      
+      .empty-state {
+        .empty-icon {
+          font-size: 32px;
+          margin-bottom: 12px;
+          color: #d9d9d9;
+        }
+        
+        p {
+          color: #8c8c8c;
+          margin: 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  
+  // Performance Chart
+  .performance-chart {
+    padding: 24px;
+    
+    .chart-placeholder {
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      
+      .chart-bars {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        gap: 16px;
+        padding: 20px 0;
+        
+        .chart-bar {
+          flex: 1;
+          min-height: 20px;
+          border-radius: 4px 4px 0 0;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          transition: all 0.3s;
+          
+          &:hover {
+            opacity: 0.8;
+          }
+          
+          .bar-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 11px;
+            color: #8c8c8c;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+          }
+          
+          .bar-value {
+            position: absolute;
+            top: -20px;
+            font-size: 11px;
+            color: #262626;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+          }
+        }
+      }
+      
+      .chart-axis {
+        text-align: center;
+        padding: 20px 0 0 0;
+        border-top: 1px solid #f0f0f0;
+        
+        span {
+          font-size: 12px;
+          color: #8c8c8c;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  // Actions Section
+  .action-buttons {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    .action-button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      height: 40px;
+      text-align: left;
+      padding: 0 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.3s;
+      
+      &.btn-primary {
+        background: #1890ff;
+        color: white;
+        
+        &:hover {
+          background: #40a9ff;
+        }
+      }
+      
+      &.btn-secondary {
+        border: 1px solid #d9d9d9;
+        background: #fff;
+        color: #595959;
+        
+        &:hover {
+          border-color: #40a9ff;
+          color: #40a9ff;
+        }
+      }
+      
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Scrollbar styling
+.activity-list {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 2px;
+    
+    &:hover {
+      background: #bfbfbf;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .dashboard-container {
+    .dashboard-header {
+      padding: 16px;
+      
+      .header-content .header-text h1 {
+        font-size: 20px;
+      }
+    }
+    
+    .dashboard-grid {
+      gap: 16px;
+    }
+    
+    .agents-status-grid .agent-status-item {
+      padding: 12px;
+      
+      .agent-metrics {
+        gap: 12px;
+        
+        .metric .metric-value {
+          font-size: 12px;
+        }
+      }
+    }
+    
+    .performance-chart .chart-placeholder {
+      height: 250px;
+      
+      .chart-bars {
+        padding: 16px 0;
+        gap: 12px;
+      }
+    }
+  }
+}

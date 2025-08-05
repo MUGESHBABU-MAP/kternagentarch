@@ -1,0 +1,258 @@
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Collaboration</h1>
+      <p class="text-base text-gray-500">Work together on digital maps and process flows</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button nz-button nzType="primary" (click)="inviteCollaborator()">
+        <i nz-icon nzType="user-add" class="mr-1"></i>
+        Invite User
+      </button>
+      <button nz-button nzType="default" (click)="createWorkspace()">
+        <i nz-icon nzType="plus" class="mr-1"></i>
+        New Workspace
+      </button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nzType="default" nz-dropdown>
+          <i nz-icon nzType="more" class="mr-1"></i>
+          More
+          <i nz-icon nzType="down"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item (click)="managePermissions()">
+            <i nz-icon nzType="safety-certificate" class="mr-2"></i>
+            Manage Permissions
+          </li>
+          <li nz-menu-item (click)="exportActivity()">
+            <i nz-icon nzType="export" class="mr-2"></i>
+            Export Activity
+          </li>
+          <li nz-menu-item (click)="viewAnalytics()">
+            <i nz-icon nzType="bar-chart" class="mr-2"></i>
+            View Analytics
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
+  </div>
+
+  <!-- Tabs Section -->
+  <nz-tabset [(nzSelectedIndex)]="selectedTabIndex" (nzSelectedIndexChange)="onTabChange($event)">
+    <!-- Active Collaborations Tab -->
+    <nz-tab nzTitle="Active Collaborations">
+      <div class="grid grid-cols-2 gap-6">
+        <nz-card 
+          *ngFor="let collab of activeCollaborations" 
+          class="card hover-shadow hover-lift transition cursor-pointer"
+          (click)="openCollaboration(collab)"
+        >
+          <div class="flex flex-col h-full">
+            <!-- Collaboration Header -->
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary bg-opacity-10 flex items-center justify-center">
+                  <i nz-icon [nzType]="getCollaborationIcon(collab.type)" class="text-lg text-primary"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ collab.title }}</h3>
+                  <div class="flex items-center gap-2">
+                    <nz-tag [nzColor]="getTypeColor(collab.type)" nzSize="small">{{ collab.type }}</nz-tag>
+                    <nz-tag [nzColor]="getStatusColor(collab.status)" nzSize="small">{{ collab.status }}</nz-tag>
+                  </div>
+                </div>
+              </div>
+              <nz-dropdown [nzTrigger]="'click'">
+                <button nz-button nzType="text" nzSize="small" nz-dropdown (click)="$event.stopPropagation()">
+                  <i nz-icon nzType="more"></i>
+                </button>
+                <ul nz-menu>
+                  <li nz-menu-item (click)="editCollaboration(collab, $event)">
+                    <i nz-icon nzType="edit" class="mr-2"></i>
+                    Edit
+                  </li>
+                  <li nz-menu-item (click)="shareCollaboration(collab, $event)">
+                    <i nz-icon nzType="share-alt" class="mr-2"></i>
+                    Share
+                  </li>
+                  <li nz-menu-item (click)="duplicateCollaboration(collab, $event)">
+                    <i nz-icon nzType="copy" class="mr-2"></i>
+                    Duplicate
+                  </li>
+                  <li nz-menu-divider></li>
+                  <li nz-menu-item nzDanger (click)="archiveCollaboration(collab, $event)">
+                    <i nz-icon nzType="inbox" class="mr-2"></i>
+                    Archive
+                  </li>
+                </ul>
+              </nz-dropdown>
+            </div>
+
+            <!-- Description -->
+            <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ collab.description }}</p>
+
+            <!-- Participants -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-600">Participants</span>
+                <span class="text-xs text-gray-500">{{ collab.participants.length }} members</span>
+              </div>
+            <div class="flex items-center gap-1">
+                <nz-avatar 
+                  *ngFor="let participant of collab.participants.slice(0, 5)" 
+                  [nzText]="participant.initials"
+                  [style.background-color]="participant.color"
+                  nzSize="small"
+                  [nzTooltipTitle]="participant.name"
+                  nz-tooltip
+                  class="avatar-overlap"
+                ></nz-avatar>
+                <span *ngIf="collab.participants.length > 5" class="text-xs text-gray-500 ml-2">
+                  +{{ collab.participants.length - 5 }} more
+                </span>
+              </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-600">Progress</span>
+                <span class="text-xs text-gray-500">{{ collab.progress }}%</span>
+              </div>
+              <nz-progress 
+                [nzPercent]="collab.progress" 
+                nzSize="small" 
+                [nzShowInfo]="false"
+                [nzStrokeColor]="getProgressColor(collab.progress)"
+              ></nz-progress>
+            </div>
+
+            <!-- Activity Stats -->
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="text-center">
+                <div class="text-lg font-semibold text-gray-900">{{ collab.comments }}</div>
+                <div class="text-xs text-gray-500">Comments</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-semibold text-gray-900">{{ collab.changes }}</div>
+                <div class="text-xs text-gray-500">Changes</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-semibold text-gray-900">{{ collab.reviews }}</div>
+                <div class="text-xs text-gray-500">Reviews</div>
+              </div>
+            </div>
+
+            <!-- Meta Info -->
+            <div class="flex justify-between items-center text-xs text-gray-400 pt-3 border-t">
+              <span>Updated {{ collab.lastActivity }}</span>
+              <div class="flex items-center gap-1">
+                <i nz-icon nzType="clock-circle" class="text-xs"></i>
+                <span>{{ collab.deadline }}</span>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- Team Members Tab -->
+    <nz-tab nzTitle="Team Members">
+      <div class="grid grid-cols-3 gap-6">
+        <nz-card 
+          *ngFor="let member of teamMembers" 
+          class="card hover-shadow transition"
+        >
+          <div class="text-center">
+            <!-- Member Avatar -->
+            <nz-avatar 
+              [nzText]="member.initials" 
+              [style.background-color]="member.color"
+              nzSize="large"
+              class="mb-4"
+            ></nz-avatar>
+            
+            <!-- Member Info -->
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ member.name }}</h3>
+            <p class="text-sm text-gray-500 mb-3">{{ member.role }}</p>
+            
+            <!-- Member Stats -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="text-center">
+                <div class="text-lg font-semibold text-gray-900">{{ member.contributions }}</div>
+                <div class="text-xs text-gray-500">Contributions</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-semibold text-gray-900">{{ member.reviews }}</div>
+                <div class="text-xs text-gray-500">Reviews</div>
+              </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <div class="w-2 h-2 rounded-full" [class.bg-success]="member.status === 'online'" [class.bg-gray-400]="member.status === 'offline'"></div>
+              <span class="text-xs text-gray-500">{{ member.status === 'online' ? 'Online' : 'Last seen ' + member.lastSeen }}</span>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex justify-center gap-2">
+              <button nz-button nzType="text" nzSize="small" (click)="messageUser(member)">
+                <i nz-icon nzType="message"></i>
+              </button>
+              <button nz-button nzType="text" nzSize="small" (click)="viewProfile(member)">
+                <i nz-icon nzType="user"></i>
+              </button>
+              <button nz-button nzType="text" nzSize="small" (click)="manageUserPermissions(member)">
+                <i nz-icon nzType="setting"></i>
+              </button>
+            </div>
+          </div>
+        </nz-card>
+      </div>
+    </nz-tab>
+
+    <!-- Recent Activity Tab -->
+    <nz-tab nzTitle="Recent Activity">
+      <div class="max-w-4xl">
+        <nz-timeline>
+          <nz-timeline-item 
+            *ngFor="let activity of recentActivities" 
+            [nzColor]="getActivityColor(activity.type)"
+          >
+            <div class="flex items-start gap-3">
+              <nz-avatar 
+                [nzText]="activity.user.initials" 
+                [style.background-color]="activity.user.color"
+                nzSize="small"
+              ></nz-avatar>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-medium text-gray-900">{{ activity.user.name }}</span>
+                  <span class="text-sm text-gray-500">{{ activity.action }}</span>
+                  <nz-tag [nzColor]="getActivityTypeColor(activity.type)" nzSize="small">{{ activity.type }}</nz-tag>
+                </div>
+                <p class="text-sm text-gray-600 mb-2">{{ activity.description }}</p>
+                <div class="flex items-center gap-4 text-xs text-gray-400">
+                  <span>{{ activity.timestamp }}</span>
+                  <span>{{ activity.project }}</span>
+                </div>
+              </div>
+            </div>
+          </nz-timeline-item>
+        </nz-timeline>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <!-- Empty State -->
+  <div *ngIf="selectedTabIndex === 0 && activeCollaborations.length === 0" class="empty-state">
+    <i nz-icon nzType="team" class="text-6xl text-gray-300 mb-4"></i>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No active collaborations</h3>
+    <p class="text-gray-500 mb-4">Start collaborating with your team members</p>
+    <button nz-button nzType="primary" (click)="createWorkspace()">
+      <i nz-icon nzType="plus" class="mr-1"></i>
+      Create Workspace
+    </button>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<div class="logs-upload-container">
+  <div class="upload-content">
+    
+    <!-- Upload Instructions -->
+    <div class="upload-instructions">
+      <nz-alert
+        nzType="info"
+        nzShowIcon
+        nzMessage="File Upload Requirements"
+        nzDescription="Upload up to 50 SAP usage log files in CSV, Excel (.xls/.xlsx), or text format. Maximum total size: 5GB."
+        nzCloseable="false">
+      </nz-alert>
+    </div>
+
+    <!-- Upload Form -->
+    <form [formGroup]="uploadForm" class="upload-form">
+      
+      <!-- File Upload Area -->
+      <div class="upload-section">
+        <nz-upload
+          nzType="drag"
+          [nzMultiple]="true"
+          [nzFileList]="fileList"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="handleChange($event)"
+          class="upload-drag">
+          <p class="ant-upload-drag-icon">
+            <i nz-icon nzType="inbox"></i>
+          </p>
+          <p class="ant-upload-text">Click or drag files to this area to upload</p>
+          <p class="ant-upload-hint">
+            Support for multiple CSV, Excel, and text files. Up to 50 files, 5GB total.
+          </p>
+        </nz-upload>
+      </div>
+
+      <!-- Upload Summary -->
+      <div class="upload-summary" *ngIf="fileList.length > 0">
+        <div class="summary-stats">
+          <div class="stat-item">
+            <span class="stat-label">Files:</span>
+            <span class="stat-value">{{ fileList.length }}/50</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Size:</span>
+            <span class="stat-value">{{ getTotalSizeFormatted() }}</span>
+          </div>
+        </div>
+        
+        <div class="file-list">
+          <div class="file-item" *ngFor="let file of fileList; let i = index">
+            <div class="file-info">
+              <i nz-icon nzType="file-text" class="file-icon"></i>
+              <span class="file-name">{{ file.name }}</span>
+              <span class="file-size">({{ formatFileSize(file.size || 0) }})</span>
+            </div>
+            <button nz-button 
+                    nzType="text" 
+                    nzSize="small"
+                    (click)="removeFileAt(i)"
+                    [disabled]="uploading">
+              <i nz-icon nzType="close"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Description -->
+      <div class="description-section" *ngIf="fileList.length > 0">
+        <nz-form-item>
+          <nz-form-label>Description (Optional)</nz-form-label>
+          <nz-form-control>
+            <textarea
+              nz-input
+              formControlName="description"
+              placeholder="Add a description for this log file..."
+              [nzAutosize]="{ minRows: 3, maxRows: 5 }">
+            </textarea>
+            <nz-form-explain *ngIf="uploadForm.get('description') && uploadForm.get('description')!.errors && uploadForm.get('description')!.errors!['maxlength']">
+              Description cannot exceed 500 characters
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Upload Result -->
+      <div class="upload-result" *ngIf="uploadResult">
+        <nz-alert
+          [nzType]="uploadResult.success ? 'success' : 'error'"
+          [nzMessage]="uploadResult.success ? 'Upload Successful' : 'Upload Failed'"
+          [nzDescription]="getResultDescription()"
+          nzShowIcon
+          nzCloseable="false">
+        </nz-alert>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="upload-actions">
+        <button type="button" class="btn-default" (click)="onBack()" [disabled]="uploading">
+          <i nz-icon nzType="arrow-left"></i>
+          Back
+        </button>
+
+        <div class="upload-controls">
+          <button 
+            type="button"
+            *ngIf="fileList.length > 0 && !uploadResult" 
+            class="btn-default" 
+            (click)="removeFile()"
+            [disabled]="uploading">
+            <i nz-icon nzType="delete"></i>
+            Remove File
+          </button>
+
+          <button
+            type="button"
+            class="btn-primary"
+            (click)="handleUpload()"
+            [disabled]="fileList.length === 0 || uploading">
+            <i nz-icon nzType="upload" *ngIf="!uploading"></i>
+            <app-loading-spinner *ngIf="uploading" [inline]="true"></app-loading-spinner>
+            {{ uploading ? 'Processing...' : 'Upload & Process' }}
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Processing Status -->
+    <div class="processing-status" *ngIf="uploading">
+      <div class="status-content">
+        <app-loading-spinner></app-loading-spinner>
+        <div class="status-text">
+          <h4>Processing Upload</h4>
+          <p>Validating and processing your log file...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

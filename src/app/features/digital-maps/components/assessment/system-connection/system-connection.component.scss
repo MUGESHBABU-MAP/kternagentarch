@@ -1,0 +1,349 @@
+// System Connection Component Styles
+// Professional assessment step styling
+
+.assessment-step-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.step-card {
+  flex: 1;
+  
+  :host ::ng-deep .ant-card-head {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    border-bottom: none;
+    
+    .ant-card-head-title {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+}
+
+.step-content {
+  .step-description {
+    margin-bottom: 24px;
+    
+    p {
+      color: #595959;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+}
+
+.form-section {
+  margin-bottom: 32px;
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 16px;
+  }
+}
+
+// Radio Group Styling
+:host ::ng-deep .ant-radio-group {
+  width: 100%;
+  
+  .ant-radio-wrapper {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: #1890ff;
+    background-color: #f0f7ff;
+  }
+  
+  :host ::ng-deep .ant-radio-wrapper-checked & {
+    border-color: #1890ff;
+    background-color: #e6f7ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+  }
+}
+
+.radio-content {
+  margin-left: 12px;
+  
+  strong {
+    display: block;
+    color: #262626;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  p {
+    color: #8c8c8c;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// Form Styling
+.connection-form {
+  :host ::ng-deep .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  :host ::ng-deep .ant-form-item-label {
+    padding-bottom: 4px;
+    
+    label {
+      font-weight: 500;
+      color: #262626;
+    }
+  }
+  
+  :host ::ng-deep .ant-input,
+  :host ::ng-deep .ant-input-number {
+    border-radius: 6px;
+    
+    &:focus,
+    &:hover {
+      border-color: #1890ff;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+    }
+  }
+  
+  :host ::ng-deep .ant-input-number {
+    width: 100%;
+  }
+}
+
+// Connection Status
+.connection-status {
+  margin: 24px 0;
+  
+  :host ::ng-deep .ant-alert {
+    border-radius: 6px;
+    
+    &.ant-alert-success {
+      background-color: #f6ffed;
+      border-color: #b7eb8f;
+    }
+    
+    &.ant-alert-error {
+      background-color: #fff2f0;
+      border-color: #ffccc7;
+    }
+  }
+}
+
+// Action Buttons
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 24px;
+  
+  button {
+    min-width: 120px;
+    height: 36px;
+    border-radius: 6px;
+    font-weight: 500;
+    
+    &.ant-btn-default {
+      border-color: #d9d9d9;
+      
+      &:hover {
+        border-color: #1890ff;
+        color: #1890ff;
+      }
+    }
+    
+    &.ant-btn-primary {
+      background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+      border: none;
+      box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+      
+      &:hover {
+        background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+        box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+      }
+      
+      &:disabled {
+        background: #f5f5f5;
+        color: #bfbfbf;
+        box-shadow: none;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Help Card
+.help-card {
+  width: 300px;
+  flex-shrink: 0;
+  
+  :host ::ng-deep .ant-card-head {
+    background: #fafafa;
+    
+    .ant-card-head-title {
+      color: #262626;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.help-content {
+  :host ::ng-deep .ant-collapse {
+    background: transparent;
+    border: none;
+    
+    .ant-collapse-item {
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    .ant-collapse-header {
+      padding: 12px 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: #262626;
+    }
+    
+    .ant-collapse-content {
+      background: transparent;
+      border-top: none;
+      
+      .ant-collapse-content-box {
+        padding: 0 0 12px 0;
+      }
+    }
+  }
+  
+  ul {
+    margin: 0;
+    padding-left: 16px;
+    
+    li {
+      color: #595959;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 4px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      strong {
+        color: #262626;
+      }
+    }
+  }
+}
+
+// Loading States
+:host ::ng-deep .ant-btn-loading {
+  .anticon {
+    margin-right: 8px;
+  }
+}
+
+// Responsive Design
+@media (max-width: 576px) {
+  .assessment-step-container {
+    padding: 0 16px;
+  }
+  
+  .step-card {
+    :host ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
+  }
+  
+  .form-section {
+    margin-bottom: 24px;
+  }
+  
+  .connection-form {
+    :host ::ng-deep .ant-col {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+}
+
+// Animation
+.step-card,
+.help-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Focus States
+:host ::ng-deep .ant-input:focus,
+:host ::ng-deep .ant-input-number:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+// Error States
+:host ::ng-deep .ant-form-item-has-error {
+  .ant-input,
+  .ant-input-number {
+    border-color: #ff4d4f;
+    
+    &:focus {
+      border-color: #ff4d4f;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+    }
+  }
+}

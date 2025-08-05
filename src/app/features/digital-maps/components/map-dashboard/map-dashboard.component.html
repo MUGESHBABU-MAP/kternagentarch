@@ -1,0 +1,189 @@
+<div class="p-6">
+  <!-- Header Section -->
+  <div class="flex justify-between items-start mb-6">
+    <div class="flex-1">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-2">Digital Maps</h1>
+      <p class="text-base text-gray-500">Visualize and manage your SAP system architecture</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button nz-button nzType="primary" (click)="createNewMap()">
+        <i nz-icon nzType="plus" class="mr-1"></i>
+        Create Map
+      </button>
+      <button nz-button nzType="default" (click)="importMap()">
+        <i nz-icon nzType="import" class="mr-1"></i>
+        Import
+      </button>
+      <button nz-button nzType="default" (click)="exportMaps()">
+        <i nz-icon nzType="export" class="mr-1"></i>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter and Search Section -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-4">
+      <nz-input-group nzPrefixIcon="search" class="w-80">
+        <input 
+          type="text" 
+          nz-input 
+          placeholder="Search maps by name, type, or module..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch()"
+        />
+      </nz-input-group>
+      <nz-select [(ngModel)]="selectedCategory" nzPlaceHolder="All Categories" class="w-48" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Categories"></nz-option>
+        <nz-option nzValue="finance" nzLabel="Finance"></nz-option>
+        <nz-option nzValue="sales" nzLabel="Sales"></nz-option>
+        <nz-option nzValue="procurement" nzLabel="Procurement"></nz-option>
+        <nz-option nzValue="inventory" nzLabel="Inventory"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedStatus" nzPlaceHolder="All Status" class="w-32" (ngModelChange)="onFilterChange()">
+        <nz-option nzValue="" nzLabel="All Status"></nz-option>
+        <nz-option nzValue="active" nzLabel="Active"></nz-option>
+        <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
+        <nz-option nzValue="archived" nzLabel="Archived"></nz-option>
+      </nz-select>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-gray-500">View:</span>
+      <nz-radio-group [(ngModel)]="viewMode" (ngModelChange)="onViewModeChange()">
+        <label nz-radio-button nzValue="grid">
+          <i nz-icon nzType="appstore"></i>
+        </label>
+        <label nz-radio-button nzValue="list">
+          <i nz-icon nzType="bars"></i>
+        </label>
+      </nz-radio-group>
+    </div>
+  </div>
+
+  <!-- Maps Grid View -->
+  <div *ngIf="viewMode === 'grid'" class="grid grid-cols-3 gap-6">
+    <nz-card 
+      *ngFor="let map of filteredMaps" 
+      class="card hover-shadow hover-lift transition cursor-pointer"
+      (click)="openMap(map)"
+    >
+      <div class="flex flex-col h-full">
+        <!-- Map Preview -->
+        <div class="h-32 bg-gray-100 rounded-md mb-4 flex items-center justify-center">
+          <i nz-icon [nzType]="getMapIcon(map.category)" class="text-4xl text-gray-400"></i>
+        </div>
+        
+        <!-- Map Info -->
+        <div class="flex-1">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-semibold text-gray-900 truncate">{{ map.name }}</h3>
+            <nz-tag [nzColor]="getStatusColor(map.status)" nzSize="small">{{ map.status }}</nz-tag>
+          </div>
+          <p class="text-sm text-gray-500 mb-3 line-clamp-2">{{ map.description }}</p>
+          
+          <!-- Map Stats -->
+          <div class="flex justify-between items-center text-xs text-gray-500 mb-3">
+            <span>{{ map.modules }} modules</span>
+            <span>{{ map.processes }} processes</span>
+            <span>{{ map.connections }} connections</span>
+          </div>
+          
+          <!-- Map Meta -->
+          <div class="flex justify-between items-center text-xs text-gray-400">
+            <span>Updated {{ map.lastUpdated }}</span>
+            <div class="flex items-center gap-1">
+              <nz-avatar [nzText]="map.author.initials" nzSize="small" class="w-5 h-5 text-xs"></nz-avatar>
+              <span>{{ map.author.name }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center mt-4 pt-3 border-t">
+          <button nz-button nzType="text" nzSize="small" (click)="editMap(map, $event)">
+            <i nz-icon nzType="edit" class="mr-1"></i>
+            Edit
+          </button>
+          <button nz-button nzType="text" nzSize="small" (click)="duplicateMap(map, $event)">
+            <i nz-icon nzType="copy" class="mr-1"></i>
+            Duplicate
+          </button>
+          <button nz-button nzType="text" nzSize="small" nzDanger (click)="deleteMap(map, $event)">
+            <i nz-icon nzType="delete" class="mr-1"></i>
+            Delete
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Maps List View -->
+  <div *ngIf="viewMode === 'list'">
+    <nz-table #basicTable [nzData]="filteredMaps" [nzPageSize]="10" [nzShowPagination]="true">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Modules</th>
+          <th>Processes</th>
+          <th>Last Updated</th>
+          <th>Author</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let map of basicTable.data" class="cursor-pointer hover:bg-gray-50" (click)="openMap(map)">
+          <td>
+            <div class="flex items-center gap-3">
+              <i nz-icon [nzType]="getMapIcon(map.category)" class="text-lg text-gray-400"></i>
+              <div>
+                <div class="font-medium text-gray-900">{{ map.name }}</div>
+                <div class="text-sm text-gray-500 truncate max-w-xs">{{ map.description }}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getCategoryColor(map.category)">{{ map.category }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(map.status)">{{ map.status }}</nz-tag>
+          </td>
+          <td>{{ map.modules }}</td>
+          <td>{{ map.processes }}</td>
+          <td>{{ map.lastUpdated }}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <nz-avatar [nzText]="map.author.initials" nzSize="small"></nz-avatar>
+              <span class="text-sm">{{ map.author.name }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center gap-1">
+              <button nz-button nzType="text" nzSize="small" (click)="editMap(map, $event)">
+                <i nz-icon nzType="edit"></i>
+              </button>
+              <button nz-button nzType="text" nzSize="small" (click)="duplicateMap(map, $event)">
+                <i nz-icon nzType="copy"></i>
+              </button>
+              <button nz-button nzType="text" nzSize="small" nzDanger (click)="deleteMap(map, $event)">
+                <i nz-icon nzType="delete"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredMaps.length === 0" class="empty-state">
+    <i nz-icon nzType="environment" class="text-6xl text-gray-300 mb-4"></i>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">No maps found</h3>
+    <p class="text-gray-500 mb-4">Create your first digital map to get started</p>
+    <button nz-button nzType="primary" (click)="createNewMap()">
+      <i nz-icon nzType="plus" class="mr-1"></i>
+      Create Map
+    </button>
+  </div>
+</div>

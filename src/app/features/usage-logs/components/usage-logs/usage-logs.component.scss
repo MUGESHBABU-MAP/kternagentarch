@@ -1,0 +1,643 @@
+// Enterprise Usage Logs Component
+.usage-logs-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .main-card {
+    border: 1px solid var(--border-color);
+    background: var(--background-primary);
+  }
+
+  .step-content {
+    min-height: 500px;
+  }
+
+  .step-header {
+    margin-bottom: 32px;
+    text-align: center;
+    position: relative;
+
+    .back-button {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 8px 16px;
+      color: var(--text-primary);
+      background: var(--background-primary);
+      border: 1px solid var(--border-color);
+      font-weight: 500;
+      
+      &:hover {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+  }
+
+  // Enterprise Method Selection Step
+  .selection-step {
+    .method-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 40px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .method-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid var(--border-color);
+      height: 100%;
+      background: var(--background-primary);
+
+      &:hover {
+        border-color: var(--accent-color);
+        box-shadow: var(--shadow-medium);
+      }
+
+      &.upload-card:hover {
+        border-color: var(--success-color);
+      }
+
+      &.fetch-card:hover {
+        border-color: var(--accent-color);
+      }
+
+      .method-content {
+        text-align: center;
+        padding: 32px 24px;
+
+        .method-icon {
+          font-size: 48px;
+          margin-bottom: 20px;
+          display: block;
+        }
+
+        .upload-card & .method-icon {
+          color: var(--success-color);
+        }
+
+        .fetch-card & .method-icon {
+          color: var(--accent-color);
+        }
+
+        h4 {
+          margin: 0 0 16px 0;
+          font-size: 20px;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        p {
+          margin: 0 0 24px 0;
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .feature-list {
+          text-align: left;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+
+          li {
+            position: relative;
+            padding: 6px 0 6px 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+
+            &:before {
+              content: '✓';
+              position: absolute;
+              left: 0;
+              color: var(--success-color);
+              font-weight: bold;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Enterprise Upload and Fetch Steps
+  .upload-step,
+  .fetch-step {
+    .step-header {
+      position: relative;
+      text-align: left;
+      padding-left: 80px;
+
+      h3 {
+        text-align: left;
+      }
+    }
+  }
+
+  // Enterprise Results Step
+  .results-step {
+    .step-header {
+      position: relative;
+      text-align: left;
+      padding-left: 80px;
+
+      h3 {
+        text-align: left;
+      }
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+        gap: 16px;
+
+        nz-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Enterprise Button Styles
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+  }
+}
+
+.btn-default {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+
+  &:disabled {
+    background: var(--background-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+}
+
+// Enterprise Data Section
+.enterprise-data-section {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+  
+  .section-header {
+    background: var(--background-tertiary);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .section-title {
+      font-size: 16px;
+    }
+    
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+  
+  .section-body {
+    padding: 24px;
+  }
+}
+
+// Enterprise Form Styling
+.enterprise-form {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  
+  .form-section {
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      background: var(--background-primary);
+      color: var(--text-primary);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+      }
+    }
+    
+    .form-help {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+  }
+}
+
+// Status Indicators
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  
+  &.success {
+    color: var(--success-color);
+    
+    .status-dot {
+      background: var(--success-color);
+    }
+  }
+  
+  &.warning {
+    color: var(--warning-color);
+    
+    .status-dot {
+      background: var(--warning-color);
+    }
+  }
+  
+  &.error {
+    color: var(--error-color);
+    
+    .status-dot {
+      background: var(--error-color);
+    }
+  }
+  
+  &.info {
+    color: var(--accent-color);
+    
+    .status-dot {
+      background: var(--accent-color);
+    }
+  }
+}
+
+// Progress Indicators
+.progress-section {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 24px;
+  
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    .progress-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .progress-percentage {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--background-tertiary);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+  }
+  
+  .progress-details {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+}
+
+// File Upload Area
+.upload-area {
+  border: 2px dashed var(--border-color);
+  background: var(--background-secondary);
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--accent-color);
+    background: var(--background-primary);
+  }
+  
+  &.dragover {
+    border-color: var(--accent-color);
+    background: rgba(52, 152, 219, 0.05);
+  }
+  
+  .upload-icon {
+    font-size: 48px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  
+  .upload-text {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  
+  .upload-hint {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+}
+
+// Data Table Enhancements
+.enterprise-table {
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  
+  .table-header {
+    background: var(--background-tertiary);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .table-title {
+      font-size: 16px;
+    }
+    
+    .table-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+}
+
+// Global overrides for enterprise theme
+:host {
+  ::ng-deep {
+    .ant-card-head-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .ant-btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent-color);
+      font-weight: 500;
+      
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+    
+    .ant-card {
+      border: 1px solid var(--border-color);
+      background: var(--background-primary);
+    }
+    
+    .ant-card-head {
+      background: var(--background-tertiary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background: var(--background-tertiary);
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      
+      .ant-table-tbody > tr:hover > td {
+        background: var(--background-secondary);
+      }
+    }
+    
+    .ant-btn {
+      border-radius: 4px;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      
+      &.ant-btn-primary {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        
+        &:hover {
+          background: var(--secondary-color);
+          border-color: var(--secondary-color);
+        }
+      }
+      
+      &.ant-btn-default {
+        background: var(--background-primary);
+        color: var(--text-primary);
+        
+        &:hover {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+        }
+      }
+    }
+    
+    .ant-input {
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      
+      &:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+      }
+    }
+    
+    .ant-select-selector {
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+    
+    .ant-select-focused .ant-select-selector {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+    }
+    
+    .ant-progress-line .ant-progress-bg {
+      background: var(--accent-color);
+    }
+    
+    .ant-tag {
+      border: 1px solid var(--border-color);
+      background: var(--background-tertiary);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .usage-logs-container {
+    padding: 16px;
+  }
+  
+  .enterprise-form {
+    padding: 16px;
+  }
+  
+  .progress-section {
+    padding: 16px;
+  }
+}
+
+// Loading states
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  
+  .loading-content {
+    text-align: center;
+    color: var(--text-secondary);
+    
+    .loading-spinner {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    
+    .loading-text {
+      font-size: 14px;
+    }
+  }
+}

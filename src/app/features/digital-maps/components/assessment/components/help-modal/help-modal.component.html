@@ -1,0 +1,156 @@
+<div class="help-modal-container">
+  <nz-tabset nzType="card" nzSize="small">
+    <!-- Help Tab -->
+    <nz-tab nzTitle="Help Guide">
+      <div class="help-content">
+        <div class="help-section">
+          <div class="section-header">
+            <i nz-icon nzType="info-circle" class="section-icon"></i>
+            <h3>Getting Started</h3>
+          </div>
+          <p>This comprehensive guide will help you understand the system prerequisites and connection setup process for your SAP assessment.</p>
+        </div>
+
+        <div class="help-section">
+          <div class="section-header">
+            <i nz-icon nzType="check-circle" class="section-icon"></i>
+            <h3>Prerequisites Checklist</h3>
+          </div>
+          <div class="checklist">
+            <div class="checklist-item">
+              <div class="item-icon">
+                <i nz-icon nzType="desktop"></i>
+              </div>
+              <div class="item-content">
+                <h4>SAP System Access</h4>
+                <p>Ensure you have administrative access to your SAP system with proper credentials and authorization.</p>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="item-icon">
+                <i nz-icon nzType="wifi"></i>
+              </div>
+              <div class="item-content">
+                <h4>Network Connectivity</h4>
+                <p>Verify stable network connectivity between your system and SAP environment with proper firewall configurations.</p>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="item-icon">
+                <i nz-icon nzType="user"></i>
+              </div>
+              <div class="item-content">
+                <h4>User Permissions</h4>
+                <p>Confirm you have the necessary user permissions for system analysis including read access to system tables.</p>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <div class="item-icon">
+                <i nz-icon nzType="hdd"></i>
+              </div>
+              <div class="item-content">
+                <h4>System Resources</h4>
+                <p>Check that your system meets minimum requirements: 4GB RAM and 10GB free disk space.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <div class="section-header">
+            <i nz-icon nzType="api" class="section-icon"></i>
+            <h3>Connection Types</h3>
+          </div>
+          <div class="connection-types">
+            <div class="connection-type">
+              <div class="type-header">
+                <i nz-icon nzType="safety-certificate"></i>
+                <h4>VPN Connection</h4>
+              </div>
+              <p>Secure connection through Virtual Private Network. Supports both OpenVPN and Standard VPN protocols.</p>
+              <div class="type-features">
+                <span class="feature-tag">Secure</span>
+                <span class="feature-tag">Encrypted</span>
+                <span class="feature-tag">Flexible</span>
+              </div>
+            </div>
+            <div class="connection-type">
+              <div class="type-header">
+                <i nz-icon nzType="lock"></i>
+                <h4>IPSec Connection</h4>
+              </div>
+              <p>Internet Protocol Security for encrypted communication with template-based configuration.</p>
+              <div class="type-features">
+                <span class="feature-tag">Enterprise</span>
+                <span class="feature-tag">Template-based</span>
+                <span class="feature-tag">Robust</span>
+              </div>
+            </div>
+            <div class="connection-type">
+              <div class="type-header">
+                <i nz-icon nzType="deployment-unit"></i>
+                <h4>K-Tern Connector</h4>
+              </div>
+              <p>Dedicated connector for seamless integration with advanced monitoring and management capabilities.</p>
+              <div class="type-features">
+                <span class="feature-tag">Dedicated</span>
+                <span class="feature-tag">Monitoring</span>
+                <span class="feature-tag">Advanced</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <div class="section-header">
+            <i nz-icon nzType="customer-service" class="section-icon"></i>
+            <h3>Need More Help?</h3>
+          </div>
+          <div class="support-options">
+            <div class="support-option">
+              <i nz-icon nzType="mail"></i>
+              <div>
+                <h4>Email Support</h4>
+                <p>Contact our support team at <a href="mailto:support@ktern.com">support@ktern.com</a></p>
+              </div>
+            </div>
+            <div class="support-option">
+              <i nz-icon nzType="book"></i>
+              <div>
+                <h4>Documentation</h4>
+                <p>Visit our comprehensive documentation portal for detailed guides</p>
+              </div>
+            </div>
+            <div class="support-option">
+              <i nz-icon nzType="video-camera"></i>
+              <div>
+                <h4>Video Tutorials</h4>
+                <p>Watch step-by-step video tutorials for visual guidance</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-tab>
+
+    <!-- FAQ Tab -->
+    <nz-tab nzTitle="FAQ">
+      <div class="faq-content">
+        <div class="faq-search">
+          <nz-input-group nzPrefixIcon="search">
+            <input nz-input placeholder="Search FAQ..." [(ngModel)]="searchTerm" (ngModelChange)="filterFAQ()">
+          </nz-input-group>
+        </div>
+
+        <nz-collapse nzGhost>
+          <nz-collapse-panel 
+            *ngFor="let faq of filteredFAQs" 
+            [nzHeader]="faq.question"
+            [nzActive]="false">
+            <div class="faq-answer" [innerHTML]="faq.answer"></div>
+          </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>

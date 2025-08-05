@@ -1,0 +1,134 @@
+<div class="assessment-container">
+  <!-- Assessment Header -->
+  <div class="assessment-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="assessment-title">
+          <i nz-icon nzType="audit" class="title-icon"></i>
+          Digital Maps Assessment
+        </h1>
+        <p class="assessment-subtitle">Complete your SAP system assessment in 5 simple steps</p>
+      </div>
+      <div class="header-right">
+        <div class="progress-info">
+          <span class="progress-text">Step {{ currentStepIndex + 1 }} of {{ wizardSteps.length }}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
+          </div>
+          <span class="progress-percentage">{{ getOverallProgress() | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Connection Details Panel -->
+  <div class="system-connection-panel" *ngIf="systemConnectionDetails">
+    <nz-collapse nzGhost>
+      <nz-collapse-panel 
+        nzHeader="Connected System Details" 
+        [nzActive]="false"
+        [nzShowArrow]="true">
+        <div class="connection-details">
+          <div class="connection-status">
+            <nz-tag nzColor="green">
+              <i nz-icon nzType="check-circle"></i>
+              Connected
+            </nz-tag>
+          </div>
+          <div class="system-info">
+            <div class="info-item">
+              <span class="info-label">System ID:</span>
+              <span class="info-value">{{ systemConnectionDetails.systemId }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Connection Type:</span>
+              <span class="info-value">{{ systemConnectionDetails.connectionType }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Version:</span>
+              <span class="info-value">{{ systemConnectionDetails.version }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Client:</span>
+              <span class="info-value">{{ systemConnectionDetails.client }}</span>
+            </div>
+          </div>
+          <div class="connection-actions">
+            <button nz-button 
+                    nzType="default" 
+                    nzSize="small"
+                    (click)="editSystemConnection()">
+              <i nz-icon nzType="edit"></i>
+              Edit Connection
+            </button>
+          </div>
+        </div>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+
+  <!-- Steps Navigation -->
+  <div class="steps-navigation">
+    <div class="steps-container">
+      <div class="step-item" 
+           *ngFor="let step of wizardSteps; let i = index"
+           [class]="getStepClass(i)"
+           (click)="navigateToStep(step.route)">
+        <div class="step-indicator">
+          <div class="step-circle">
+            <i *ngIf="step.completed" nz-icon nzType="check" class="step-icon"></i>
+            <span *ngIf="!step.completed" class="step-number">{{ i + 1 }}</span>
+          </div>
+          <div class="step-connector" *ngIf="i < wizardSteps.length - 1"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">{{ step.name }}</div>
+          <div class="step-description">{{ step.description }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Step Content -->
+  <div class="step-content-area">
+    <nz-card class="step-card">
+      <div class="step-header">
+        <div class="step-title">
+          <i nz-icon [nzType]="getCurrentStepIcon()" class="step-title-icon"></i>
+          {{ getCurrentStepTitle() }}
+        </div>
+        <div class="step-actions">
+          <button 
+            nz-button 
+            nzType="default" 
+            (click)="previousStep()"
+            [disabled]="currentStepIndex === 0"
+            nzSize="small">
+            <i nz-icon nzType="arrow-left"></i>
+            Previous
+          </button>
+          
+          <button 
+            nz-button 
+            nzType="primary" 
+            (click)="nextStep()"
+            [disabled]="currentStepIndex === wizardSteps.length - 1"
+            nzSize="small">
+            Next
+            <i nz-icon nzType="arrow-right"></i>
+          </button>
+          
+          <button nz-button nzType="default" (click)="resetAssessment()" nzSize="small">
+            <i nz-icon nzType="reload"></i>
+            Reset
+          </button>
+        </div>
+      </div>
+      
+      <div class="step-body">
+        <router-outlet></router-outlet>
+      </div>
+      
+    </nz-card>
+  </div>
+</div>

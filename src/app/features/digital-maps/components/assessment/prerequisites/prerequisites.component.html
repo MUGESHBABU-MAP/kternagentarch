@@ -1,0 +1,160 @@
+<div class="prerequisites-container">
+  <!-- Prerequisites Header -->
+  <div class="step-description">
+    <p>Before starting the assessment, please ensure your system meets the following prerequisites. All items must be verified to proceed.</p>
+  </div>
+
+  <!-- Prerequisites Checklist -->
+  <div class="prerequisites-checklist">
+    <nz-card nzTitle="System Prerequisites" class="checklist-card">
+      <div class="checklist-section">
+        <h4 class="section-title">
+          <i nz-icon nzType="desktop" class="section-icon"></i>
+          System Requirements
+        </h4>
+        <div class="checklist-items">
+          <div class="checklist-item" *ngFor="let req of systemRequirements">
+            <label nz-checkbox 
+                   [(ngModel)]="req.checked" 
+                   (ngModelChange)="onPrerequisiteChange()"
+                   [nzDisabled]="isChecking">
+              <span class="item-title">{{ req.title }}</span>
+            </label>
+            <div class="item-description">{{ req.description }}</div>
+            <div class="item-status" [ngClass]="req.checked ? 'status-success' : 'status-pending'">
+              <i nz-icon [nzType]="req.checked ? 'check-circle' : 'clock-circle'"></i>
+              {{ req.checked ? 'Verified' : 'Pending' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <div class="checklist-section">
+        <h4 class="section-title">
+          <i nz-icon nzType="safety-certificate" class="section-icon"></i>
+          Access & Permissions
+        </h4>
+        <div class="checklist-items">
+          <div class="checklist-item" *ngFor="let perm of accessPermissions">
+            <label nz-checkbox 
+                   [(ngModel)]="perm.checked" 
+                   (ngModelChange)="onPrerequisiteChange()"
+                   [nzDisabled]="isChecking">
+              <span class="item-title">{{ perm.title }}</span>
+            </label>
+            <div class="item-description">{{ perm.description }}</div>
+            <div class="item-status" [ngClass]="perm.checked ? 'status-success' : 'status-pending'">
+              <i nz-icon [nzType]="perm.checked ? 'check-circle' : 'clock-circle'"></i>
+              {{ perm.checked ? 'Verified' : 'Pending' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nz-divider></nz-divider>
+
+      <div class="checklist-section">
+        <h4 class="section-title">
+          <i nz-icon nzType="cloud-server" class="section-icon"></i>
+          Network & Connectivity
+        </h4>
+        <div class="checklist-items">
+          <div class="checklist-item" *ngFor="let net of networkRequirements">
+            <label nz-checkbox 
+                   [(ngModel)]="net.checked" 
+                   (ngModelChange)="onPrerequisiteChange()"
+                   [nzDisabled]="isChecking">
+              <span class="item-title">{{ net.title }}</span>
+            </label>
+            <div class="item-description">{{ net.description }}</div>
+            <div class="item-status" [ngClass]="net.checked ? 'status-success' : 'status-pending'">
+              <i nz-icon [nzType]="net.checked ? 'check-circle' : 'clock-circle'"></i>
+              {{ net.checked ? 'Verified' : 'Pending' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Auto-Check Section -->
+  <div class="auto-check-section">
+    <nz-card nzTitle="Automated Verification" class="auto-check-card">
+      <div class="auto-check-content">
+        <div class="auto-check-description">
+          <p>Click the button below to automatically verify system prerequisites where possible.</p>
+        </div>
+        <div class="auto-check-actions">
+          <button nz-button 
+                  nzType="primary" 
+                  nzSize="large"
+                  [nzLoading]="isChecking"
+                  (click)="runAutomaticCheck()"
+                  class="auto-check-btn">
+            <i nz-icon nzType="thunderbolt"></i>
+            {{ isChecking ? 'Checking Prerequisites...' : 'Run Automatic Check' }}
+          </button>
+        </div>
+        <div class="auto-check-results" *ngIf="autoCheckResults">
+          <nz-alert 
+            [nzType]="autoCheckResults.success ? 'success' : 'warning'"
+            [nzMessage]="autoCheckResults.message"
+            [nzDescription]="autoCheckResults.description"
+            nzShowIcon>
+          </nz-alert>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Progress Summary -->
+  <div class="progress-summary">
+    <nz-card nzTitle="Prerequisites Summary" class="summary-card">
+      <div class="summary-content">
+        <div class="progress-info">
+          <div class="progress-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ getCompletedCount() }}</span>
+              <span class="stat-label">Completed</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalCount() }}</span>
+              <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getProgressPercentage() }}%</span>
+              <span class="stat-label">Progress</span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <nz-progress 
+              [nzPercent]="getProgressPercentage()" 
+              nzStatus="active"
+              [nzStrokeColor]="getProgressPercentage() === 100 ? '#52c41a' : '#1890ff'">
+            </nz-progress>
+          </div>
+        </div>
+        <div class="summary-actions">
+          <button nz-button 
+                  nzType="default" 
+                  (click)="resetPrerequisites()"
+                  [disabled]="isChecking">
+            <i nz-icon nzType="reload"></i>
+            Reset All
+          </button>
+          <button nz-button 
+                  nzType="primary" 
+                  [disabled]="!allPrerequisitesMet()"
+                  (click)="proceedToNext()">
+            <i nz-icon nzType="arrow-right"></i>
+            Continue to System Connection
+          </button>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

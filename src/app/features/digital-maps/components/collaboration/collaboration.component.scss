@@ -1,0 +1,222 @@
+// Component-specific styles for collaboration
+// Most styling is handled by utility classes in the global styles
+
+// Line clamp utility for description text
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Background opacity utility
+.bg-opacity-10 {
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+// Card grid responsive adjustments
+@media (max-width: 1024px) {
+  :host ::ng-deep .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  :host ::ng-deep .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .p-6 {
+    padding: 16px;
+  }
+  
+  .text-3xl {
+    font-size: 24px;
+  }
+}
+
+// Empty state styling
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+// Tab content styling
+:host ::ng-deep .ant-tabs-content-holder {
+  padding-top: 24px;
+}
+
+// Timeline styling
+:host ::ng-deep .ant-timeline {
+  .ant-timeline-item {
+    padding-bottom: 24px;
+    
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+  
+  .ant-timeline-item-content {
+    margin-left: 0;
+    padding-left: 24px;
+  }
+}
+
+// Progress bar styling
+:host ::ng-deep .ant-progress {
+  .ant-progress-bg {
+    border-radius: 4px;
+  }
+}
+
+// Avatar overlap styling (replacement for avatar-group)
+.avatar-overlap {
+  border: 2px solid #ffffff;
+  margin-left: -8px;
+  
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+// Dropdown menu styling
+:host ::ng-deep .ant-dropdown-menu {
+  .ant-dropdown-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    
+    &:hover {
+      background-color: #f0f0f0;
+    }
+    
+    &.ant-dropdown-menu-item-danger:hover {
+      background-color: rgba(255, 77, 79, 0.1);
+      color: #ff4d4f;
+    }
+  }
+  
+  .ant-dropdown-menu-item-divider {
+    margin: 4px 0;
+  }
+}
+
+// Button hover effects
+:host ::ng-deep .ant-btn {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &.ant-btn-text {
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+// Card hover effects
+:host ::ng-deep .ant-card {
+  transition: all 0.3s ease;
+  
+  &.hover-shadow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.hover-lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Tag styling
+:host ::ng-deep .ant-tag {
+  border-radius: 4px;
+  font-size: 12px;
+  padding: 2px 8px;
+  margin: 0;
+}
+
+// Avatar styling
+:host ::ng-deep .ant-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  
+  &.ant-avatar-lg {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+// Status indicator styling
+.w-2.h-2.rounded-full {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+// Grid stats styling for collaboration cards
+.grid.grid-cols-3 {
+  .text-center {
+    padding: 8px 4px;
+    
+    .text-lg {
+      line-height: 1.2;
+    }
+    
+    .text-xs {
+      margin-top: 2px;
+    }
+  }
+}
+
+// Team member card specific styling
+.text-center {
+  .mb-4:last-of-type {
+    margin-bottom: 16px;
+  }
+}
+
+// Responsive adjustments for team member stats
+@media (max-width: 480px) {
+  .grid.grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    
+    .text-center {
+      padding: 4px;
+    }
+  }
+}
+
+// Tab styling
+:host ::ng-deep .ant-tabs {
+  .ant-tabs-tab {
+    font-weight: 500;
+    
+    &.ant-tabs-tab-active {
+      color: #1890ff;
+    }
+  }
+  
+  .ant-tabs-ink-bar {
+    background: #1890ff;
+  }
+}
+
+// Timeline item custom styling
+:host ::ng-deep .ant-timeline-item-head {
+  background-color: #ffffff;
+  border: 2px solid;
+}

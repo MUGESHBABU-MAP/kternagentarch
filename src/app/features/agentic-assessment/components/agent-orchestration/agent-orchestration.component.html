@@ -1,0 +1,655 @@
+<div class="agentic-orchestration-container">
+  <!-- Assessment Header -->
+  <div class="assessment-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="assessment-title">
+          🤖 Agentic Assessment Platform
+        </h1>
+        <p class="assessment-subtitle">AI-powered SAP system assessment with intelligent agent collaboration</p>
+      </div>
+      <div class="header-right">
+        <div class="progress-info">
+          <span class="progress-text">Step {{ currentStepIndex + 1 }} of {{ assessmentSteps.length }}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
+          </div>
+          <span class="progress-percentage">{{ getOverallProgress() | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Connection Details Panel -->
+  <div class="system-connection-panel" *ngIf="systemConnectionDetails">
+    <div class="connection-card">
+      <div class="connection-header">
+        <h3>Connected System Details</h3>
+        <div class="connection-status">
+          <span class="status-badge connected">
+            ✅ Connected
+          </span>
+        </div>
+      </div>
+      <div class="connection-details">
+        <div class="system-info">
+          <div class="info-item">
+            <span class="info-label">System ID:</span>
+            <span class="info-value">{{ systemConnectionDetails.systemId }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Connection Type:</span>
+            <span class="info-value">{{ systemConnectionDetails.connectionType }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Version:</span>
+            <span class="info-value">{{ systemConnectionDetails.version }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Client:</span>
+            <span class="info-value">{{ systemConnectionDetails.client }}</span>
+          </div>
+        </div>
+        <div class="connection-actions">
+          <button class="btn-secondary" (click)="editSystemConnection()">
+            ✏️ Edit Connection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assessment Flow Steps -->
+  <div class="assessment-flow">
+    <div class="flow-container">
+      <div class="step-item" 
+           *ngFor="let step of assessmentSteps; let i = index"
+           [class]="getStepClass(i)"
+           (click)="navigateToStep(i)">
+        <div class="step-indicator">
+          <div class="step-circle">
+            <span *ngIf="step.completed" class="step-icon">✅</span>
+            <span *ngIf="!step.completed && i === currentStepIndex" class="step-icon">⚡</span>
+            <span *ngIf="!step.completed && i !== currentStepIndex" class="step-number">{{ i + 1 }}</span>
+          </div>
+          <div class="step-connector" *ngIf="i < assessmentSteps.length - 1"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">{{ step.name }}</div>
+          <div class="step-description">{{ step.description }}</div>
+          <div class="step-agents" *ngIf="step.agents && step.agents.length > 0">
+            <span class="agents-label">Agents:</span>
+            <span class="agent-tag" *ngFor="let agent of step.agents">{{ agent }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Step Content -->
+  <div class="step-content-area">
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-title">
+          <span class="step-title-icon">{{ getCurrentStepIcon() }}</span>
+          {{ getCurrentStepTitle() }}
+        </div>
+        <div class="step-actions">
+          <button 
+            class="btn-secondary"
+            (click)="previousStep()"
+            [disabled]="currentStepIndex === 0">
+            ← Previous
+          </button>
+          
+          <button 
+            class="btn-primary"
+            (click)="nextStep()"
+            [disabled]="!canProceedToNext()">
+            {{ getNextButtonText() }}
+          </button>
+          
+          <button class="btn-secondary" (click)="resetAssessment()">
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+      
+      <div class="step-body">
+        <!-- Step 1: System Connection Setup -->
+        <div *ngIf="currentStepIndex === 0" class="system-setup-step">
+          <div class="step-intro">
+            <h3>🔗 System Connection Setup</h3>
+            <p>Configure secure connectivity to your SAP environment for comprehensive assessment</p>
+          </div>
+
+          <!-- Connection Method Selection -->
+          <div class="connection-methods">
+            <h4>Select Connection Method</h4>
+            <div class="method-cards">
+              <div class="method-card" 
+                   *ngFor="let type of connectionTypes" 
+                   [class.selected]="selectedConnectionType === type.id"
+                   (click)="selectConnectionType(type.id)">
+                <div class="method-icon">{{ type.icon }}</div>
+                <div class="method-info">
+                  <h5>{{ type.title }}</h5>
+                  <p>{{ type.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuration Form -->
+          <div class="configuration-form" *ngIf="selectedConnectionType">
+            <h4>{{ getConfigurationTitle() }}</h4>
+            
+            <!-- VPN Configuration -->
+            <div *ngIf="selectedConnectionType === 'vpn'" class="config-section">
+              <div class="form-grid">
+                <div class="form-item">
+                  <label>VPN Protocol *</label>
+                  <select [(ngModel)]="vpnConfig.type" (ngModelChange)="onConfigChange()">
+                    <option value="">Select protocol</option>
+                    <option value="openvpn">OpenVPN</option>
+                    <option value="standard">Standard VPN</option>
+                  </select>
+                </div>
+                <div class="form-item" *ngIf="vpnConfig.type">
+                  <label>Server Address *</label>
+                  <input [(ngModel)]="vpnConfig.serverAddress" 
+                         placeholder="vpn.company.com" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+                <div class="form-item" *ngIf="vpnConfig.type">
+                  <label>Username *</label>
+                  <input [(ngModel)]="vpnConfig.username" 
+                         placeholder="Username" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+                <div class="form-item" *ngIf="vpnConfig.type">
+                  <label>Password *</label>
+                  <input type="password" [(ngModel)]="vpnConfig.password" 
+                         placeholder="Password" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+              </div>
+            </div>
+
+            <!-- IPSec Configuration -->
+            <div *ngIf="selectedConnectionType === 'ipsec'" class="config-section">
+              <div class="info-alert">
+                ℹ️ Configure your IPSec tunnel parameters
+              </div>
+              <div class="form-grid">
+                <div class="form-item">
+                  <label>Gateway Address *</label>
+                  <input [(ngModel)]="ipsecConfig.gateway" 
+                         placeholder="gateway.company.com" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+                <div class="form-item">
+                  <label>Pre-Shared Key *</label>
+                  <input type="password" [(ngModel)]="ipsecConfig.presharedKey" 
+                         placeholder="Pre-shared key" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+                <div class="form-item">
+                  <label>Local Network *</label>
+                  <input [(ngModel)]="ipsecConfig.localNetwork" 
+                         placeholder="192.168.1.0/24" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+                <div class="form-item">
+                  <label>Remote Network *</label>
+                  <input [(ngModel)]="ipsecConfig.remoteNetwork" 
+                         placeholder="10.0.0.0/16" 
+                         (ngModelChange)="onConfigChange()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Connector Configuration -->
+            <div *ngIf="selectedConnectionType === 'connector'" class="config-section">
+              <div class="connector-steps">
+                <div class="connector-step" [class.active]="connectorStep >= 0">
+                  <div class="step-indicator">1</div>
+                  <div class="step-content">
+                    <h5>Download Connector</h5>
+                    <p>Download and install the K-Tern connector</p>
+                    <button class="btn-primary" (click)="downloadConnector()">
+                      📥 Download K-Tern Connector
+                    </button>
+                  </div>
+                </div>
+                <div class="connector-step" [class.active]="connectorStep >= 1">
+                  <div class="step-indicator">2</div>
+                  <div class="step-content">
+                    <h5>Install & Configure</h5>
+                    <p>Follow the installation guide</p>
+                    <div class="info-alert">ℹ️ Run the installer as administrator</div>
+                  </div>
+                </div>
+                <div class="connector-step" [class.active]="connectorStep >= 2">
+                  <div class="step-indicator">3</div>
+                  <div class="step-content">
+                    <h5>Verify Connection</h5>
+                    <p>Test the connection</p>
+                    <button class="btn-secondary" [disabled]="isTestingConnection" (click)="testConnection()">
+                      {{ isTestingConnection ? '⏳ Testing...' : '🔗 Test Connection' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Connection Test -->
+            <div class="connection-test" *ngIf="isConfigurationValid()">
+              <div class="test-divider">Connection Verification</div>
+              <div class="test-section">
+                <p>Establish and verify your SAP system connection</p>
+                <button class="btn-primary btn-large" 
+                        [disabled]="isConnecting" 
+                        (click)="establishConnection()">
+                  {{ isConnecting ? '⚡ Establishing Connection...' : '⚡ Establish Connection' }}
+                </button>
+
+                <div *ngIf="connectionStatus" class="connection-result">
+                  <div class="result-card" [class.success]="connectionStatus.success" [class.error]="!connectionStatus.success">
+                    <div class="result-icon">
+                      {{ connectionStatus.success ? '✅' : '❌' }}
+                    </div>
+                    <div class="result-content">
+                      <h4>{{ connectionStatus.message }}</h4>
+                      <p>{{ connectionStatus.description }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Connected SAP System -->
+                  <div *ngIf="connectionStatus.success && sapLandscape" class="system-info">
+                    <div class="system-card">
+                      <div class="system-header">
+                        <h4>📊 SAP System Details</h4>
+                        <span class="status-badge connected">✅ Connected</span>
+                      </div>
+                      <div class="system-details">
+                        <div class="detail-item" *ngFor="let detail of getSystemDetails()">
+                          <span class="detail-label">{{ detail.property }}</span>
+                          <span class="detail-value">{{ detail.value }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Usage Logs Collection -->
+        <div *ngIf="currentStepIndex === 1" class="usage-logs-step">
+          <div class="step-intro">
+            <h3>📄 Usage Logs Collection</h3>
+            <p>Upload and analyze system usage logs with AI-powered processing</p>
+          </div>
+
+          <div class="logs-collection">
+            <div class="collection-methods">
+              <div class="method-card" 
+                   [class.selected]="selectedLogMethod === 'upload'"
+                   (click)="selectedLogMethod = 'upload'">
+                <div class="method-icon">📤</div>
+                <div class="method-info">
+                  <h5>Upload Log Files</h5>
+                  <p>Upload existing log files from your system</p>
+                </div>
+              </div>
+              <div class="method-card" 
+                   [class.selected]="selectedLogMethod === 'fetch'"
+                   (click)="selectedLogMethod = 'fetch'">
+                <div class="method-icon">🔄</div>
+                <div class="method-info">
+                  <h5>Fetch from System</h5>
+                  <p>Automatically fetch logs from connected system</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Method -->
+            <div *ngIf="selectedLogMethod === 'upload'" class="upload-section">
+              <div class="upload-area" 
+                   [class.dragover]="isDragOver"
+                   (dragover)="onDragOver($event)"
+                   (dragleave)="onDragLeave($event)"
+                   (drop)="onDrop($event)"
+                   (click)="fileInput.click()">
+                <div class="upload-content">
+                  <div class="upload-icon">📁</div>
+                  <h4>Drop log files here or click to browse</h4>
+                  <p>Supported formats: .log, .txt, .csv, .zip</p>
+                </div>
+                <input #fileInput type="file" multiple accept=".log,.txt,.csv,.zip" 
+                       (change)="onFileSelect($event)" style="display: none;">
+              </div>
+
+              <div *ngIf="uploadedFiles.length > 0" class="uploaded-files">
+                <h5>Uploaded Files ({{ uploadedFiles.length }})</h5>
+                <div class="file-list">
+                  <div class="file-item" *ngFor="let file of uploadedFiles; let i = index">
+                    <div class="file-info">
+                      <span class="file-name">{{ file.name }}</span>
+                      <span class="file-size">{{ formatFileSize(file.size) }}</span>
+                    </div>
+                    <button class="btn-remove" (click)="removeFile(i)">❌</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fetch Method -->
+            <div *ngIf="selectedLogMethod === 'fetch'" class="fetch-section">
+              <div class="fetch-config">
+                <div class="form-grid">
+                  <div class="form-item">
+                    <label>Log Type</label>
+                    <select [(ngModel)]="logFetchConfig.logType">
+                      <option value="system">System Logs</option>
+                      <option value="application">Application Logs</option>
+                      <option value="security">Security Logs</option>
+                      <option value="performance">Performance Logs</option>
+                    </select>
+                  </div>
+                  <div class="form-item">
+                    <label>Date Range</label>
+                    <select [(ngModel)]="logFetchConfig.dateRange">
+                      <option value="1d">Last 24 hours</option>
+                      <option value="7d">Last 7 days</option>
+                      <option value="30d">Last 30 days</option>
+                      <option value="custom">Custom Range</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn-primary" (click)="fetchLogs()">
+                  🔄 Fetch Logs from System
+                </button>
+              </div>
+            </div>
+
+            <!-- AI Processing Status -->
+            <div *ngIf="logsProcessingStatus" class="processing-status">
+              <div class="status-card">
+                <div class="status-header">
+                  <h4>🤖 AI Processing Status</h4>
+                </div>
+                <div class="processing-agents">
+                  <div class="agent-status" *ngFor="let agent of getProcessingAgents()">
+                    <div class="agent-info">
+                      <span class="agent-name">{{ agent.name }}</span>
+                      <span class="agent-task">{{ agent.currentTask }}</span>
+                    </div>
+                    <div class="agent-progress">
+                      <div class="progress-bar small">
+                        <div class="progress-fill" [style.width.%]="agent.progress"></div>
+                      </div>
+                      <span class="progress-text">{{ agent.progress }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Assessment Selection -->
+        <div *ngIf="currentStepIndex === 2" class="assessment-selection-step">
+          <div class="step-intro">
+            <h3>🎯 Assessment Selection</h3>
+            <p>Configure assessment scope and criteria with AI agent specialization</p>
+          </div>
+
+          <div class="assessment-categories">
+            <div class="category-card" 
+                 *ngFor="let category of assessmentCategories"
+                 [class.selected]="category.selected"
+                 (click)="toggleCategory(category)">
+              <div class="category-header">
+                <div class="category-icon">{{ category.icon }}</div>
+                <div class="category-info">
+                  <h5>{{ category.name }}</h5>
+                  <p>{{ category.description }}</p>
+                </div>
+                <div class="category-toggle">
+                  <span class="toggle-switch" [class.active]="category.selected">
+                    {{ category.selected ? '✅' : '⭕' }}
+                  </span>
+                </div>
+              </div>
+              <div class="category-agents" *ngIf="category.selected">
+                <span class="agents-label">Assigned Agents:</span>
+                <span class="agent-tag" *ngFor="let agent of category.agents">{{ agent }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="assessment-config" *ngIf="getSelectedCategories().length > 0">
+            <h4>Assessment Configuration</h4>
+            <div class="config-options">
+              <div class="config-item">
+                <label>Assessment Depth</label>
+                <select [(ngModel)]="assessmentConfig.depth">
+                  <option value="basic">Basic Analysis</option>
+                  <option value="detailed">Detailed Analysis</option>
+                  <option value="comprehensive">Comprehensive Analysis</option>
+                </select>
+              </div>
+              <div class="config-item">
+                <label>Priority Focus</label>
+                <select [(ngModel)]="assessmentConfig.priority">
+                  <option value="performance">Performance Optimization</option>
+                  <option value="security">Security Assessment</option>
+                  <option value="compliance">Compliance Review</option>
+                  <option value="modernization">Modernization Readiness</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Agent Orchestration & Progress -->
+        <div *ngIf="currentStepIndex === 3" class="orchestration-step">
+          <div class="step-intro">
+            <h3>🤖 Agent Orchestration & Progress</h3>
+            <p>Monitor AI agents as they collaborate to analyze your SAP system</p>
+          </div>
+
+          <!-- Workflow Control -->
+          <div class="workflow-control">
+            <div class="workflow-info" *ngIf="workflow">
+              <h4>{{ workflow.name }}</h4>
+              <p>{{ workflow.description }}</p>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getWorkflowProgress()"></div>
+              </div>
+              <span class="progress-text">{{ getWorkflowProgress() }}% Complete</span>
+            </div>
+            
+            <div class="control-buttons">
+              <button 
+                class="btn-primary"
+                [disabled]="isRunning"
+                (click)="startWorkflow()">
+                {{ isRunning ? '⚡ Agents Working...' : '🚀 Start Assessment' }}
+              </button>
+              
+              <button 
+                class="btn-secondary"
+                (click)="toggleMessages()">
+                {{ showMessages ? '👁️ Hide Messages' : '👁️ Show Messages' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Agents Grid -->
+          <div class="agents-grid">
+            <div 
+              *ngFor="let agent of agents; trackBy: trackByAgentId"
+              class="agent-card"
+              [class.selected]="selectedAgent && selectedAgent.id === agent.id"
+              [class.running]="agent.status === 'running' || agent.status === 'processing'"
+              [class.completed]="agent.status === 'completed'"
+              [class.error]="agent.status === 'error'"
+              (click)="selectAgent(agent)">
+              
+              <div class="agent-header">
+                <div class="agent-avatar" [style.background-color]="agent.color">
+                  {{ agent.avatar }}
+                </div>
+                <div class="agent-info">
+                  <h5>{{ agent.name }}</h5>
+                  <p>{{ agent.description }}</p>
+                </div>
+                <div class="agent-status-badge" [class]="agent.status">
+                  {{ agent.status | titlecase }}
+                </div>
+              </div>
+              
+              <div class="agent-status">
+                <div class="status-indicator">
+                  <span class="status-icon" [style.color]="getStatusColor(agent.status)">
+                    {{ getStatusIcon(agent.status) }}
+                  </span>
+                  <span [style.color]="getStatusColor(agent.status)">
+                    {{ agent.status | titlecase }}
+                  </span>
+                </div>
+                
+                <div class="task-progress" *ngIf="agent.currentTask">
+                  <div class="task-info">
+                    <span class="task-name">{{ agent.currentTask.name }}</span>
+                    <span class="task-progress-text">{{ agent.currentTask.progress }}%</span>
+                  </div>
+                  <div class="progress-bar small">
+                    <div class="progress-fill" [style.width.%]="agent.currentTask.progress"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="agent-controls" *ngIf="selectedAgent && selectedAgent.id === agent.id">
+                <button 
+                  class="btn-control"
+                  [disabled]="agent.status !== 'running'"
+                  (click)="pauseAgent(agent); $event.stopPropagation()">
+                  ⏸️
+                </button>
+                <button 
+                  class="btn-control"
+                  [disabled]="agent.status !== 'paused'"
+                  (click)="resumeAgent(agent); $event.stopPropagation()">
+                  ▶️
+                </button>
+                <button 
+                  class="btn-control"
+                  (click)="restartAgent(agent); $event.stopPropagation()">
+                  🔄
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Panel -->
+          <div class="messages-panel" *ngIf="showMessages">
+            <div class="panel-header">
+              <h4>💬 Agent Communications</h4>
+              <button class="btn-clear" (click)="clearMessages()">
+                🗑️ Clear
+              </button>
+            </div>
+            
+            <div class="messages-container">
+              <div class="message-item" *ngFor="let message of messages; trackBy: trackByMessageId">
+                <div class="message-header">
+                  <div class="message-agent">
+                    <span class="message-icon" [style.color]="getMessageTypeColor(message.type)">
+                      {{ getMessageTypeIcon(message.type) }}
+                    </span>
+                    <span class="agent-name">
+                      {{ getAgentNameById(message.agentId) }}
+                    </span>
+                  </div>
+                  <span class="message-time">{{ message.timestamp | date:'HH:mm:ss' }}</span>
+                </div>
+                <div class="message-content">
+                  {{ message.message }}
+                </div>
+              </div>
+              
+              <div class="no-messages" *ngIf="messages.length === 0">
+                <div class="empty-state">
+                  <div class="empty-icon">📭</div>
+                  <p>No messages yet. Start the workflow to see agent communications.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Results & Reports -->
+        <div *ngIf="currentStepIndex === 4" class="results-step">
+          <div class="step-intro">
+            <h3>📊 Assessment Results & Reports</h3>
+            <p>Review comprehensive analysis results and generated reports</p>
+          </div>
+
+          <div class="results-summary">
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div class="card-icon">🎯</div>
+                <div class="card-content">
+                  <h4>Overall Score</h4>
+                  <div class="score">{{ assessmentResults.overallScore }}/100</div>
+                </div>
+              </div>
+              <div class="summary-card">
+                <div class="card-icon">⚠️</div>
+                <div class="card-content">
+                  <h4>Critical Issues</h4>
+                  <div class="count">{{ assessmentResults.criticalIssues }}</div>
+                </div>
+              </div>
+              <div class="summary-card">
+                <div class="card-icon">💡</div>
+                <div class="card-content">
+                  <h4>Recommendations</h4>
+                  <div class="count">{{ assessmentResults.recommendations }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reports-section">
+            <h4>Generated Reports</h4>
+            <div class="reports-grid">
+              <div class="report-card" *ngFor="let report of generatedReports">
+                <div class="report-header">
+                  <div class="report-icon">{{ report.icon }}</div>
+                  <div class="report-info">
+                    <h5>{{ report.name }}</h5>
+                    <p>{{ report.description }}</p>
+                  </div>
+                </div>
+                <div class="report-actions">
+                  <button class="btn-secondary" (click)="viewReport(report)">
+                    👁️ View
+                  </button>
+                  <button class="btn-secondary" (click)="downloadReport(report)">
+                    📥 Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

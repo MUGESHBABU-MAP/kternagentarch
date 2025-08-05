@@ -1,0 +1,278 @@
+<div class="system-setup-container">
+  <!-- Page Header - Primary Level -->
+  <div class="page-header">
+    <h1>System Connection Setup</h1>
+    <p class="subtitle">Configure secure connectivity to your SAP environment for comprehensive digital transformation assessment</p>
+  </div>
+
+  <!-- Top Actions - Secondary Level -->
+  <div class="top-actions">
+    <div class="actions-label">Setup Actions</div>
+    <div class="actions-group">
+      <button nz-button nzType="default" (click)="resetConfiguration()">
+        <i nz-icon nzType="reload"></i>
+        Reset Configuration
+      </button>
+      <button nz-button nzType="primary" [disabled]="!isSetupComplete()" (click)="proceedToNext()">
+        Continue to Usage Logs
+        <i nz-icon nzType="arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Connection Configuration -->
+  <nz-card class="connection-card">
+    <div slot="title">Connection Configuration</div>
+    <p class="subtitle">Select and configure your preferred connection method to establish secure communication with your SAP system.</p>
+
+    <!-- Connection Method Selection -->
+    <div class="connection-methods">
+      <div class="method-card" 
+           *ngFor="let type of connectionTypes" 
+           [class.selected]="selectedConnectionType === type.id"
+           (click)="selectConnectionType(type.id)">
+        <div class="method-icon">
+          <i nz-icon [nzType]="type.icon"></i>
+        </div>
+        <div class="method-info">
+          <h3>{{ type.title }}</h3>
+          <p>{{ type.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration Form -->
+    <div class="configuration-form" *ngIf="selectedConnectionType">
+      <nz-card [nzTitle]="getConfigurationTitle()" nzSize="small">
+        <!-- VPN Configuration -->
+        <div *ngIf="selectedConnectionType === 'vpn'">
+          <div class="form-grid">
+            <nz-form-item>
+              <nz-form-label nzRequired>VPN Protocol</nz-form-label>
+              <nz-form-control style="min-width: 160px;">
+                <nz-select [(ngModel)]="vpnConfig.type" nzPlaceHolder="Select VPN protocol" (ngModelChange)="onConfigChange()"
+                           style="min-width: 160px;">
+                  <nz-option nzValue="openvpn" nzLabel="OpenVPN"></nz-option>
+                  <nz-option nzValue="standard" nzLabel="Standard VPN"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item *ngIf="vpnConfig.type">
+              <nz-form-label nzRequired>Server Address</nz-form-label>
+              <nz-form-control>
+                <input nz-input [(ngModel)]="vpnConfig.serverAddress" 
+                       placeholder="vpn.company.com" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item *ngIf="vpnConfig.type">
+              <nz-form-label nzRequired>Username</nz-form-label>
+              <nz-form-control>
+                <input nz-input [(ngModel)]="vpnConfig.username" 
+                       placeholder="Username" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item *ngIf="vpnConfig.type">
+              <nz-form-label nzRequired>Password</nz-form-label>
+              <nz-form-control>
+                <input nz-input type="password" [(ngModel)]="vpnConfig.password" 
+                       placeholder="Password" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- IPSec Configuration -->
+        <div *ngIf="selectedConnectionType === 'ipsec'">
+          <nz-alert nzType="info" nzMessage="Configure your IPSec tunnel parameters" nzShowIcon style="margin-bottom: 16px;"></nz-alert>
+          
+          <div class="form-grid">
+            <nz-form-item>
+              <nz-form-label nzRequired>Gateway Address</nz-form-label>
+              <nz-form-control>
+                <input nz-input [(ngModel)]="ipsecConfig.gateway" 
+                       placeholder="gateway.company.com" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzRequired>Pre-Shared Key</nz-form-label>
+              <nz-form-control>
+                <input nz-input type="password" [(ngModel)]="ipsecConfig.presharedKey" 
+                       placeholder="Pre-shared key" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzRequired>Local Network</nz-form-label>
+              <nz-form-control>
+                <input nz-input [(ngModel)]="ipsecConfig.localNetwork" 
+                       placeholder="192.168.1.0/24" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzRequired>Remote Network</nz-form-label>
+              <nz-form-control>
+                <input nz-input [(ngModel)]="ipsecConfig.remoteNetwork" 
+                       placeholder="10.0.0.0/16" (ngModelChange)="onConfigChange()">
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <!-- Connector Configuration -->
+        <div *ngIf="selectedConnectionType === 'connector'">
+          <nz-steps [nzCurrent]="connectorStep" nzDirection="vertical" nzSize="small">
+            <nz-step nzTitle="Download Connector" nzDescription="Download and install the K-Tern connector">
+              <button nz-button nzType="primary" (click)="downloadConnector()">
+                <i nz-icon nzType="download"></i>
+                Download K-Tern Connector
+              </button>
+            </nz-step>
+            
+            <nz-step nzTitle="Install & Configure" nzDescription="Follow the installation guide">
+              <nz-alert nzType="info" nzMessage="Run the installer as administrator" nzShowIcon></nz-alert>
+            </nz-step>
+            
+            <nz-step nzTitle="Verify Connection" nzDescription="Test the connection">
+              <button nz-button nzType="default" [nzLoading]="isTestingConnection" (click)="testConnection()">
+                <i nz-icon nzType="api"></i>
+                Test Connection
+              </button>
+            </nz-step>
+          </nz-steps>
+        </div>
+      </nz-card>
+
+      <!-- Connection Test -->
+      <div class="connection-test" *ngIf="isConfigurationValid()">
+        <nz-divider nzText="Connection Verification"></nz-divider>
+        
+        <div class="test-section">
+          <p>Establish and verify your SAP system connection</p>
+          <button nz-button nzType="primary" nzSize="large" 
+                  [nzLoading]="isConnecting" (click)="establishConnection()">
+            <i nz-icon nzType="thunderbolt"></i>
+            {{ isConnecting ? 'Establishing Connection...' : 'Establish Connection' }}
+          </button>
+
+          <div *ngIf="connectionStatus" class="connection-result">
+            <nz-result [nzStatus]="connectionStatus.success ? 'success' : 'error'"
+                       [nzTitle]="connectionStatus.message"
+                       [nzSubTitle]="connectionStatus.description">
+            </nz-result>
+          </div>
+
+          <!-- Connected SAP System -->
+          <div *ngIf="connectionStatus?.success && sapLandscape" class="system-info">
+            <nz-card nzTitle="SAP System" [nzBordered]="false" nzSize="small" [nzExtra]="systemInfoExtra">
+              
+              <nz-table 
+                #systemTable 
+                [nzData]="getSystemDetails()" 
+                [nzBordered]="false" 
+                [nzSize]="'middle'"
+                [nzShowPagination]="false"
+                [nzScroll]="{ x: '100%' }"
+                class="system-details-table">
+                
+                <thead>
+                  <!-- <tr>
+                    <th nzWidth="40%">Property</th>
+                    <th nzWidth="60%">Value</th>
+                  </tr> -->
+                </thead>
+                
+                <tbody>
+                  <tr *ngFor="let detail of getSystemDetails()">
+                    <td class="property-cell">
+                      <strong>{{ detail.property }}</strong>
+                    </td>
+                    <td class="value-cell">
+                      {{ detail.value }}
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-card>
+            <ng-template #systemInfoExtra>
+              <nz-tag nzColor="green">
+                <i nz-icon nzType="check-circle"></i>
+                Connected
+              </nz-tag>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nz-card>
+  <!-- Information Panels -->
+  <div class="info-panels" [class.help-expanded]="helpExpanded" [class.prerequisites-expanded]="prerequisitesExpanded">
+    <!-- Help & Support Panel -->
+    <nz-card class="help-panel" [nzTitle]="'Help & Support'" [nzExtra]="helpExtra">
+      <nz-tabset nzSize="small">
+        <nz-tab nzTitle="Quick Start">
+          <div class="help-content">
+            <div class="help-item">
+              <h4>System Requirements</h4>
+              <p>SAP ECC 6.0+ or S/4HANA with administrative access</p>
+            </div>
+            <div class="help-item">
+              <h4>Network Connectivity</h4>
+              <p>Stable internet connection with proper firewall configuration</p>
+            </div>
+            <div class="help-item">
+              <h4>Security Protocols</h4>
+              <p>VPN, IPSec, or dedicated connector for secure communication</p>
+            </div>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="FAQ">
+          <nz-collapse nzGhost>
+            <nz-collapse-panel nzHeader="What SAP versions are supported?">
+              <p>We support SAP ECC 6.0 and above, all versions of SAP S/4HANA, and SAP Business Suite applications.</p>
+            </nz-collapse-panel>
+            <nz-collapse-panel nzHeader="How long does the setup process take?">
+              <p>The typical setup time ranges from 5-15 minutes, depending on your chosen connection method.</p>
+            </nz-collapse-panel>
+            <nz-collapse-panel nzHeader="Is my data secure during the assessment?">
+              <p>Yes, all data transmission is encrypted using TLS 1.3, and we follow SOC 2 compliance standards.</p>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+    <ng-template #helpExtra>
+      <button nz-button nzType="text" nzSize="small" (click)="helpExpanded = !helpExpanded">
+        <i nz-icon [nzType]="helpExpanded ? 'shrink' : 'arrows-alt'"></i>
+      </button>
+    </ng-template>
+    
+    <!-- Prerequisites Panel -->
+    <nz-card class="prerequisites-panel" [nzTitle]="'System Prerequisites'" [nzExtra]="prerequisitesExtra">
+        <p class="description">
+          Ensure your SAP environment meets these requirements before proceeding with the connection setup.
+        </p>
+    
+        <div class="prerequisites-list">
+          <div class="prerequisite-item" *ngFor="let item of prerequisites">
+            <div class="item-content">
+              <h4>{{ item.title }}</h4>
+              <p>{{ item.description }}</p>
+            </div>
+            <nz-tag nzColor="blue">Required</nz-tag>
+          </div>
+        </div>
+    </nz-card>
+    
+    <ng-template #prerequisitesExtra>
+      <button nz-button nzType="text" nzSize="small" (click)="prerequisitesExpanded = !prerequisitesExpanded">
+        <i nz-icon [nzType]="prerequisitesExpanded ? 'shrink' : 'arrows-alt'"></i>
+      </button>
+    </ng-template>
+
+  </div>
+</div>

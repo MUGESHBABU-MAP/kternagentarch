@@ -1,0 +1,156 @@
+<div class="logs-fetch-container">
+  <div class="fetch-content">
+    
+    <!-- Fetch Instructions -->
+    <div class="fetch-instructions">
+      <nz-alert
+        nzType="info"
+        nzShowIcon
+        nzMessage="Auto-Fetch Configuration"
+        nzDescription="Configure the parameters for automatically fetching usage logs from your connected SAP system."
+        nzCloseable="false">
+      </nz-alert>
+    </div>
+
+    <!-- Fetch Form -->
+    <form [formGroup]="fetchForm" class="fetch-form" *ngIf="!isFetching">
+      
+      <!-- Date Range Selection -->
+      <div class="form-section">
+        <h4>Date Range</h4>
+        <nz-form-item>
+          <nz-form-label nzRequired>Time Period</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="dateRange" nzPlaceHolder="Select date range">
+              <nz-option 
+                *ngFor="let option of dateRangeOptions" 
+                [nzValue]="option.value" 
+                [nzLabel]="option.label">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Custom Date Range -->
+        <div class="custom-date-range" *ngIf="isCustomDateRange()">
+          <nz-form-item>
+            <nz-form-label nzRequired>Start Date</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker 
+                formControlName="customStartDate"
+                nzPlaceHolder="Select start date"
+                nzFormat="yyyy-MM-dd">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired>End Date</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker 
+                formControlName="customEndDate"
+                nzPlaceHolder="Select end date"
+                nzFormat="yyyy-MM-dd">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <!-- Module Selection -->
+      <div class="form-section">
+        <h4>SAP Modules</h4>
+        <nz-form-item>
+          <nz-form-label nzRequired>Modules to Include</nz-form-label>
+          <nz-form-control>
+            <nz-select 
+              formControlName="modules" 
+              nzMode="multiple"
+              nzPlaceHolder="Select SAP modules"
+              nzAllowClear>
+              <nz-option 
+                *ngFor="let option of moduleOptions" 
+                [nzValue]="option.value" 
+                [nzLabel]="option.label">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+      <!-- Action Buttons -->
+      <div class="fetch-actions">
+        <button type="button" class="btn-default" (click)="onBack()">
+          <i nz-icon nzType="arrow-left"></i>
+          Back
+        </button>
+
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="startFetch()"
+          [disabled]="fetchForm.invalid">
+          <i nz-icon nzType="cloud-download"></i>
+          Start Auto-Fetch
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Fetch Progress -->
+    <div class="fetch-progress" *ngIf="isFetching">
+      <div class="progress-content">
+        <div class="progress-header">
+          <h3>Fetching Usage Logs</h3>
+          <p>Please wait while we retrieve your SAP usage logs...</p>
+        </div>
+
+        <div class="progress-details">
+          <nz-progress
+            [nzPercent]="fetchStatus.progress"
+            [nzStrokeColor]="getProgressColor()"
+            nzSize="default"
+            [nzShowInfo]="true">
+          </nz-progress>
+
+          <div class="progress-message">
+            <i nz-icon nzType="loading" nzSpin></i>
+            <span>{{ fetchStatus.message }}</span>
+          </div>
+        </div>
+
+        <div class="progress-actions">
+          <button type="button" class="btn-danger" (click)="cancelFetch()">
+            <i nz-icon nzType="stop"></i>
+            Cancel Fetch
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fetch Error -->
+    <div class="fetch-error" *ngIf="fetchStatus.status === 'error'">
+      <nz-alert
+        nzType="error"
+        nzShowIcon
+        nzMessage="Fetch Failed"
+        [nzDescription]="fetchStatus.message"
+        nzCloseable="false">
+      </nz-alert>
+
+      <div class="error-actions">
+        <button type="button" class="btn-default" (click)="onBack()">
+          <i nz-icon nzType="arrow-left"></i>
+          Back to Selection
+        </button>
+
+        <button type="button" class="btn-primary" (click)="startFetch()" [disabled]="fetchForm.invalid">
+          <i nz-icon nzType="reload"></i>
+          Retry Fetch
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

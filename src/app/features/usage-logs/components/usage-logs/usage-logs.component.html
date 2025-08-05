@@ -1,0 +1,106 @@
+<div class="usage-logs-container">
+  <nz-card nzTitle="Usage Logs" class="main-card">
+    <div class="step-content">
+      
+      <!-- Method Selection Step -->
+      <div *ngIf="currentStep === 'selection'" class="selection-step">
+        <div class="step-header">
+          <h3>Choose Log Collection Method</h3>
+          <p>Select how you would like to provide your SAP usage logs for analysis.</p>
+        </div>
+        
+        <div class="method-options">
+          <nz-card 
+            class="method-card upload-card" 
+            nzHoverable
+            (click)="onMethodSelected('upload')">
+            <div class="method-content">
+              <i nz-icon nzType="upload" nzTheme="outline" class="method-icon"></i>
+              <h4>Upload Log Files</h4>
+              <p>Upload your exported SAP usage log files directly from your system.</p>
+              <ul class="feature-list">
+                <li>Support for CSV, Excel, and text formats</li>
+                <li>Batch upload multiple files</li>
+                <li>Automatic data validation</li>
+                <li>Immediate processing</li>
+              </ul>
+            </div>
+          </nz-card>
+          
+          <nz-card 
+            class="method-card fetch-card" 
+            nzHoverable
+            (click)="onMethodSelected('fetch')">
+            <div class="method-content">
+              <i nz-icon nzType="cloud-download" nzTheme="outline" class="method-icon"></i>
+              <h4>Auto-Fetch from SAP</h4>
+              <p>Automatically retrieve usage logs directly from your connected SAP system.</p>
+              <ul class="feature-list">
+                <li>Real-time data extraction</li>
+                <li>Comprehensive transaction logs</li>
+                <li>User activity tracking</li>
+                <li>Performance metrics included</li>
+              </ul>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      
+      <!-- Upload Step -->
+      <div *ngIf="currentStep === 'upload'" class="upload-step">
+        <button type="button" class="btn-link back-button" (click)="onBackToSelection()">
+          <i nz-icon nzType="arrow-left"></i> Back to Selection
+        </button>
+        <div class="step-header">
+          <h3>Upload Log Files</h3>
+        </div>
+        
+        <app-logs-upload 
+          (uploadComplete)="onUploadComplete($event)"
+          (backToSelection)="onBackToSelection()">
+        </app-logs-upload>
+      </div>
+      
+      <!-- Fetch Step -->
+      <div *ngIf="currentStep === 'fetch'" class="fetch-step">
+        <button type="button" class="btn-link back-button" (click)="onBackToSelection()">
+          <i nz-icon nzType="arrow-left"></i> Back to Selection
+        </button>
+        <div class="step-header">
+          <h3>Auto-Fetch from SAP</h3>
+        </div>
+        
+        <app-logs-fetch 
+          (fetchComplete)="onFetchComplete($event)"
+          (backToSelection)="onBackToSelection()">
+        </app-logs-fetch>
+      </div>
+      
+      <!-- Results Step -->
+      <div *ngIf="currentStep === 'results'" class="results-step">
+        <button type="button" class="btn-link back-button" (click)="onBackToSelection()">
+          <i nz-icon nzType="arrow-left"></i> Back to Selection
+        </button>
+        <div class="step-header">
+          <h3>Usage Logs Summary</h3>
+          <p>Review the collected usage logs before proceeding to the next step.</p>
+        </div>
+        
+        <div class="results-actions">
+          <button type="button" class="btn-default" (click)="onBackToSelection()">
+            <i nz-icon nzType="reload"></i>
+            Load Different Logs
+          </button>
+          
+          <button type="button" class="btn-primary" (click)="onNext()" [disabled]="logs.length === 0">
+            Continue to Assessment Selection
+            <i nz-icon nzType="arrow-right"></i>
+          </button>
+        </div>
+        
+        <app-logs-table [logs]="logs"></app-logs-table>
+      </div>
+      
+    </div>
+  </nz-card>
+</div>
