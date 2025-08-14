@@ -1,0 +1,157 @@
+<div class="agent-workflow">
+  <!-- Workflow Header -->
+  <div class="workflow-header">
+    <div class="workflow-info">
+      <h3>Agent Workflow</h3>
+      <div class="workflow-status">
+        <nz-tag [nzColor]="getStepStatusColor(workflowStatus)">
+          <i nz-icon [nzType]="getStepStatusIcon(workflowStatus)" [nzSpin]="workflowStatus === 'running'"></i>
+          {{ workflowStatus | titlecase }}
+        </nz-tag>
+      </div>
+    </div>
+    <div class="workflow-actions" *ngIf="interactive">
+      <button nz-button nzType="primary" 
+              [disabled]="!canStartWorkflow()"
+              (click)="onStartWorkflow()">
+        <i nz-icon nzType="play-circle"></i>
+        Start
+      </button>
+      <button nz-button nzType="default" 
+              [disabled]="!canStopWorkflow()"
+              (click)="onStopWorkflow()">
+        <i nz-icon nzType="pause-circle"></i>
+        Stop
+      </button>
+      <button nz-button nzType="default" 
+              [disabled]="!canResetWorkflow()"
+              (click)="resetWorkflow()">
+        <i nz-icon nzType="reload"></i>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Workflow Progress -->
+  <div class="workflow-progress">
+    <div class="progress-info">
+      <span class="progress-label">Overall Progress:</span>
+      <span class="progress-value">{{ getWorkflowProgress() }}%</span>
+    </div>
+    <nz-progress 
+      [nzPercent]="getWorkflowProgress()" 
+      [nzStatus]="workflowStatus === 'failed' ? 'exception' : workflowStatus === 'completed' ? 'success' : 'active'"
+      nzSize="small">
+    </nz-progress>
+  </div>
+
+  <!-- Workflow Steps -->
+  <div class="workflow-steps" *ngIf="workflowSteps.length > 0">
+    <nz-timeline>
+      <nz-timeline-item 
+        *ngFor="let step of workflowSteps; let i = index; trackBy: trackByStepId"
+        [nzColor]="getStepStatusColor(step.status)"
+        [nzDot]="stepDotTemplate">
+        
+        <!-- Custom dot template -->
+        <ng-template #stepDotTemplate>
+          <i nz-icon 
+             [nzType]="getStepStatusIcon(step.status)" 
+             [nzSpin]="step.status === 'running'"
+             [style.color]="getStepStatusColor(step.status)">
+          </i>
+        </ng-template>
+
+        <div class="step-content" (click)="onStepClick(step)">
+          <div class="step-header">
+            <div class="step-info">
+              <h4 class="step-name">{{ step.name }}</h4>
+              <div class="step-meta">
+                <span class="step-id">Step {{ i + 1 }}</span>
+                <span class="step-agent" (click)="onAgentClick(step); $event.stopPropagation()">
+                  <i nz-icon nzType="robot"></i>
+                  {{ step.agentId }}
+                </span>
+              </div>
+            </div>
+            <div class="step-status">
+              <nz-step [nzStatus]="step.status === 'idle' ? 'pending' : step.status" [nzTitle]="step.name">
+                {{ step.status | titlecase }}
+              </nz-step>
+            </div>
+          </div>
+
+          <div class="step-details" *ngIf="step.startTime || step.duration">
+            <div class="detail-item" *ngIf="step.startTime">
+              <span class="detail-label">Started:</span>
+              <span class="detail-value">{{ step.startTime | date:'medium' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="step.endTime">
+              <span class="detail-label">Completed:</span>
+              <span class="detail-value">{{ step.endTime | date:'medium' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="step.duration">
+              <span class="detail-label">Duration:</span>
+              <span class="detail-value">{{ formatDuration(step.duration) }}</span>
+            </div>
+          </div>
+
+          <div class="step-dependencies" *ngIf="step.dependencies.length > 0">
+            <div class="dependencies-label">Dependencies:</div>
+            <div class="dependencies-list">
+              <nz-tag *ngFor="let dep of step.dependencies" nzSize="small">
+                {{ dep }}
+              </nz-tag>
+            </div>
+          </div>
+
+          <div class="step-outputs" *ngIf="step.outputs.length > 0">
+            <div class="outputs-label">Outputs:</div>
+            <div class="outputs-list">
+              <nz-tag *ngFor="let output of step.outputs" nzSize="small" nzColor="green">
+                {{ output }}
+              </nz-tag>
+            </div>
+          </div>
+        </div>
+      </nz-timeline-item>
+    </nz-timeline>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-workflow" *ngIf="workflowSteps.length === 0">
+    <nz-empty nzNotFoundImage="simple">
+      <div class="empty-footer">
+        <div class="empty-message">No Workflow Steps</div>
+        <div class="empty-description">
+          No agents are configured for this workflow.
+        </div>
+      </div>
+    </nz-empty>
+  </div>
+
+  <!-- Workflow Timeline (Alternative View) -->
+  <div class="workflow-timeline" *ngIf="showTimeline && workflowSteps.length > 0">
+    <div class="timeline-header">
+      <h4>Execution Timeline</h4>
+    </div>
+    <div class="timeline-chart">
+      <div class="timeline-axis">
+        <div class="axis-label">Time</div>
+      </div>
+      <div class="timeline-bars">
+        <div class="timeline-bar" 
+             *ngFor="let step of workflowSteps; let i = index"
+             [class]="'status-' + step.status">
+          <div class="bar-label">{{ step.name }}</div>
+          <div class="bar-fill" 
+               [ngClass]="getStepClass(step.status === 'idle' ? 'pending' : step.status)">
+          </div>
+          <div class="bar-duration" *ngIf="step.duration">
+            {{ formatDuration(step.duration) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

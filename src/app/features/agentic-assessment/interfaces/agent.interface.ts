@@ -5,7 +5,15 @@ export enum AgentStatus {
   PROCESSING = 'processing',
   COMPLETED = 'completed',
   ERROR = 'error',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
   PAUSED = 'paused'
+}
+
+export interface ExecutionState {
+  isPaused: boolean;
+  isCancelled: boolean;
+  lastUpdated: Date;
 }
 
 export enum AgentPriority {

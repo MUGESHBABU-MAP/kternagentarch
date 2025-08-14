@@ -44,6 +44,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { StatusIndicatorComponent } from './components/status-indicator/status-indicator.component';
 import { WizardNavigationComponent } from './components/wizard-navigation/wizard-navigation.component';
+import { AIHelperComponent } from './components/ai-helper/ai-helper.component';
 
 // Shared pipes
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -89,7 +90,8 @@ const NGZORRO_MODULES = [
 const SHARED_COMPONENTS = [
   LoadingSpinnerComponent,
   StatusIndicatorComponent,
-  WizardNavigationComponent
+  WizardNavigationComponent,
+  AIHelperComponent
 ];
 
 const SHARED_PIPES = [

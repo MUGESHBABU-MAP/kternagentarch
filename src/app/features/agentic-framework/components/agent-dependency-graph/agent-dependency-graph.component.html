@@ -1,0 +1,119 @@
+<div class="agent-dependency-graph">
+  <div class="graph-container">
+    <svg class="graph-svg" viewBox="0 0 600 600" *ngIf="nodes.length > 0">
+      <!-- Edges -->
+      <g class="edges-group">
+        <path
+          *ngFor="let edge of edges; trackBy: trackByEdge"
+          [attr.d]="getEdgePath(edge)"
+          [class]="getEdgeClass(edge)"
+          marker-end="url(#arrowhead)">
+        </path>
+      </g>
+
+      <!-- Nodes -->
+      <g class="nodes-group">
+        <g
+          *ngFor="let node of nodes; trackBy: trackByNodeId"
+          [class]="getNodeClass(node)"
+          [attr.transform]="'translate(' + node.x + ',' + node.y + ')'"
+          (click)="onNodeClick(node)"
+          (mouseenter)="onNodeMouseEnter(node)"
+          (mouseleave)="onNodeMouseLeave()">
+          
+          <!-- Node circle -->
+          <circle
+            r="25"
+            [attr.fill]="node.color"
+            [attr.stroke]="node.status === 'active' ? '#52c41a' : '#d9d9d9'"
+            stroke-width="3">
+          </circle>
+          
+          <!-- Node icon -->
+          <text
+            class="node-icon"
+            text-anchor="middle"
+            dominant-baseline="central"
+            [attr.fill]="node.status === 'active' ? '#fff' : '#666'">
+            {{ getNodeIconText(node.icon) }}
+          </text>
+          
+          <!-- Node label -->
+          <text
+            *ngIf="showLabels"
+            class="node-label"
+            text-anchor="middle"
+            y="40">
+            {{ node.name }}
+          </text>
+          
+          <!-- Status indicator -->
+          <circle
+            class="status-indicator"
+            r="6"
+            cx="18"
+            cy="-18"
+            [attr.fill]="getStatusColor(node.status)">
+          </circle>
+        </g>
+      </g>
+
+      <!-- Arrow marker definition -->
+      <defs>
+        <marker
+          id="arrowhead"
+          markerWidth="10"
+          markerHeight="7"
+          refX="9"
+          refY="3.5"
+          orient="auto">
+          <polygon
+            points="0 0, 10 3.5, 0 7"
+            fill="#666">
+          </polygon>
+        </marker>
+      </defs>
+    </svg>
+
+    <!-- Empty state -->
+    <div class="empty-graph" *ngIf="nodes.length === 0">
+      <i nz-icon nzType="apartment"></i>
+      <h4>No Dependencies</h4>
+      <p>No agent dependencies to display in the graph.</p>
+    </div>
+  </div>
+
+  <!-- Graph controls -->
+  <div class="graph-controls" *ngIf="interactive && nodes.length > 0">
+    <div class="control-group">
+      <button nz-button nzType="text" nzSize="small" (click)="centerGraph()">
+        <i nz-icon nzType="aim"></i>
+        Center
+      </button>
+      <button nz-button nzType="text" nzSize="small" (click)="showLabels = !showLabels">
+        <i nz-icon [nzType]="showLabels ? 'eye' : 'eye-invisible'"></i>
+        {{ showLabels ? 'Hide' : 'Show' }} Labels
+      </button>
+    </div>
+  </div>
+
+  <!-- Graph legend -->
+  <div class="graph-legend">
+    <div class="legend-item">
+      <div class="legend-color" style="background: #52c41a;"></div>
+      <span>Active</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #faad14;"></div>
+      <span>Idle</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ff4d4f;"></div>
+      <span>Error</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #d9d9d9;"></div>
+      <span>Disabled</span>
+    </div>
+  </div>
+</div>

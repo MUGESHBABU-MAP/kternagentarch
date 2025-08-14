@@ -1,119 +1,86 @@
-// Enterprise Assessment Component Styles
+// ============================================
+// Assessment Component
+// ============================================
+
+// Container
+// --------------------------------------------
 .assessment-container {
   padding: 24px;
   max-width: 1400px;
   margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-// Enterprise Assessment Header
-.assessment-header {
+// Progress Bar
+// --------------------------------------------
+.progress-container {
   margin-bottom: 24px;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-radius: 4px;
   
-  .header-content {
+  .progress-info {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    background: var(--primary-color);
-    color: white;
-    font-weight: 600;
-    border-bottom: 3px solid var(--secondary-color);
+    gap: 16px;
+    
+    .progress-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      white-space: nowrap;
+    }
+    
+    .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      
+      .progress-fill {
+        height: 100%;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+      }
+    }
+    
+    .progress-percentage {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 40px;
+      text-align: right;
+    }
     
     @media (max-width: 768px) {
       flex-direction: column;
-      gap: 16px;
-      text-align: center;
-    }
-  }
-  
-  .header-left {
-    .assessment-title {
-      font-size: 24px;
-      font-weight: 600;
-      margin: 0 0 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      
-      .title-icon {
-        font-size: 28px;
-      }
-      
-      @media (max-width: 768px) {
-        font-size: 22px;
-        justify-content: center;
-      }
-    }
-    
-    .assessment-subtitle {
-      font-size: 14px;
-      margin: 0;
-      opacity: 0.9;
-      font-weight: 400;
-      
-      @media (max-width: 768px) {
-        font-size: 13px;
-      }
-    }
-  }
-  
-  .header-right {
-    .progress-info {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      
-      @media (max-width: 768px) {
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      .progress-text {
-        font-size: 14px;
-        font-weight: 500;
-        white-space: nowrap;
-      }
+      align-items: stretch;
+      gap: 8px;
       
       .progress-bar {
-        width: 200px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        overflow: hidden;
-        
-        @media (max-width: 768px) {
-          width: 160px;
-        }
-        
-        .progress-fill {
-          height: 100%;
-          background: white;
-          transition: width 0.3s ease;
-        }
-      }
-      
-      .progress-percentage {
-        font-size: 14px;
-        font-weight: 600;
-        min-width: 40px;
-        text-align: right;
+        width: 100%;
       }
     }
   }
 }
 
-// Enterprise System Connection Panel
+// System Connection Panel
+// --------------------------------------------
 .system-connection-panel {
   margin-bottom: 24px;
-  background: var(--background-primary);
-  border: 1px solid var(--border-color);
+  background: var(--background-primary, #fff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 4px;
   
   .connection-details {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 20px 24px;
+    padding: 16px 20px;
     
     @media (max-width: 768px) {
       flex-direction: column;
@@ -122,7 +89,27 @@
     }
     
     .connection-status {
-      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        
+        .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #52c41a;
+        }
+        
+        .status-text {
+          font-size: 14px;
+          color: var(--text-primary, #333);
+        }
+      }
     }
     
     .system-info {
@@ -143,19 +130,25 @@
         
         .info-label {
           font-weight: 500;
-          color: var(--text-secondary);
+          color: var(--text-secondary, #666);
           min-width: 80px;
         }
         
         .info-value {
-          color: var(--text-primary);
+          color: var(--text-primary, #333);
           font-weight: 600;
         }
       }
     }
     
     .connection-actions {
-      flex-shrink: 0;
+      display: flex;
+      gap: 8px;
+      
+      @media (max-width: 768px) {
+        width: 100%;
+        justify-content: flex-end;
+      }
     }
   }
 }
@@ -344,6 +337,67 @@
     
     :host ::ng-deep .ant-card-body {
       padding: 0;
+    }
+  }
+  
+  // Enterprise Assessment Component Styles
+  .assessment-container {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  // Progress Container
+  .progress-container {
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      
+      .progress-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+      }
+      
+      .progress-bar {
+        flex: 1;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+        
+        .progress-fill {
+          height: 100%;
+          background: var(--primary-color);
+          transition: width 0.3s ease;
+        }
+      }
+      
+      .progress-percentage {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-color);
+        min-width: 40px;
+        text-align: right;
+      }
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 8px;
+        
+        .progress-bar {
+          width: 100%;
+        }
+      }
     }
   }
 }

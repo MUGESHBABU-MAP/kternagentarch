@@ -1,0 +1,105 @@
+<div class="agent-hub">
+  <!-- Hub Header -->
+  <div class="hub-header">
+    <div class="header-content">
+      <h2 class="hub-title">
+        <i nz-icon nzType="appstore" nzTheme="outline"></i>
+        Agent Hub
+      </h2>
+      <p class="hub-description">
+        Discover and explore all available agents in the framework. Browse by category, search by functionality, or filter by status.
+      </p>
+    </div>
+    
+    <div class="hub-stats">
+      <div class="stat-card" *ngFor="let stat of getCategoryStats()">
+        <div class="stat-icon" [style.background]="stat.color">
+          <i nz-icon [nzType]="stat.icon" nzTheme="outline"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ stat.agentCount }}</div>
+          <div class="stat-label">{{ stat.name }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="state.loading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">Loading agents...</div>
+    </nz-spin>
+  </div>
+
+  <!-- Agent Content -->
+  <div class="hub-content" *ngIf="!state.loading">
+    <!-- Category Sections -->
+    <div class="category-section" *ngFor="let category of state.categories; trackBy: trackByCategoryId">
+      <div class="category-header" (click)="onCategorySelect(category)">
+        <div class="category-info">
+          <div class="category-icon" [style.background]="category.color">
+            <i nz-icon [nzType]="category.icon" nzTheme="outline"></i>
+          </div>
+          <div class="category-details">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p class="category-description">{{ category.description }}</p>
+          </div>
+        </div>
+        <div class="category-count">
+          <nz-badge [nzCount]="getAgentsByCategory(category.id).length" nzStatus="default"></nz-badge>
+        </div>
+      </div>
+
+      <!-- Agents in Category -->
+      <div class="category-agents" *ngIf="getAgentsByCategory(category.id).length > 0">
+        <!-- Grid View -->
+        <div class="agents-grid" *ngIf="state.viewMode === 'grid'">
+          <app-agent-card
+            *ngFor="let agent of getAgentsByCategory(category.id); trackBy: trackByAgentId"
+            [agent]="agent"
+            [showActions]="true"
+            (agentSelect)="viewAgentDetails(agent)"
+            (agentPin)="onAgentPin($event); $event.stopPropagation()"
+            (agentExecute)="onAgentExecute($event); $event.stopPropagation()">
+          </app-agent-card>
+        </div>
+
+        <!-- List View -->
+        <div class="agents-list" *ngIf="state.viewMode === 'list'">
+          <app-agent-list
+            [agents]="getAgentsByCategory(category.id)"
+            [showActions]="true"
+            (agentSelect)="viewAgentDetails($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)">
+          </app-agent-list>
+        </div>
+
+        <!-- Timeline View -->
+        <div class="agents-timeline" *ngIf="state.viewMode === 'timeline'">
+          <app-agent-timeline
+            [agents]="getAgentsByCategory(category.id)"
+            [showActions]="true"
+            (agentSelect)="viewAgentDetails($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)">
+          </app-agent-timeline>
+        </div>
+      </div>
+
+      <!-- Empty State for Category -->
+      <div class="empty-category" *ngIf="getAgentsByCategory(category.id).length === 0">
+        <nz-empty [nzNotFoundContent]="'No agents found in ' + category.name"></nz-empty>
+      </div>
+    </div>
+
+    <!-- Global Empty State -->
+    <div class="empty-hub" *ngIf="state.filteredAgents.length === 0 && !state.loading">
+      <nz-empty nzNotFoundContent="No agents match your current filters">
+        <div nz-empty-footer>
+          <button nz-button nzType="primary" (click)="createNewAgent()">Create New Agent</button>
+        </div>
+      </nz-empty>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<div class="agent-results-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    <p>Loading execution details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <nz-result nzStatus="error" [nzTitle]="'Error Loading Execution'" [nzSubTitle]="error">
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="goBack()">Go Back</button>
+      </div>
+    </nz-result>
+  </div>
+
+  <!-- Results Content -->
+  <div *ngIf="execution && !loading" class="execution-details">
+    <div class="execution-header">
+      <h2>
+        <i nz-icon [nzType]="'file-done'" [nzTheme]="'outline'"></i>
+        Execution Results
+      </h2>
+      <div class="execution-meta">
+        <nz-tag [nzColor]="getStatusColor(execution.status)">
+          {{ execution.status | titlecase }}
+        </nz-tag>
+        <span class="execution-id">ID: {{ execution.id }}</span>
+      </div>
+    </div>
+
+    <div class="execution-info">
+      <nz-descriptions nzBordered [nzColumn]="1">
+        <nz-descriptions-item nzTitle="Agent">
+          {{ getAgentName(execution.agentId) }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Started">
+          {{ formatDate(execution.startTime) }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Duration">
+          {{ formatDuration(execution.startTime, execution.endTime) }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Progress">
+          <nz-progress 
+            [nzPercent]="execution.progress || 0" 
+            [nzStatus]="getProgressStatus(execution.status)"
+            [nzShowInfo]="true">
+          </nz-progress>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </div>
+
+    <div class="execution-tabs">
+      <nz-tabset [(nzSelectedIndex)]="activeTab">
+        <nz-tab nzTitle="Output">
+          <div class="output-container">
+            <pre class="output-log">{{ getOutputLogs() }}</pre>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Parameters">
+          <div class="parameters-container">
+            <nz-descriptions nzBordered [nzColumn]="1">
+              <nz-descriptions-item 
+                *ngFor="let param of getExecutionParameters()" 
+                [nzTitle]="param.key">
+                {{ param.value }}
+              </nz-descriptions-item>
+            </nz-descriptions>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Metrics">
+          <div class="metrics-container">
+            <nz-descriptions nzBordered [nzColumn]="1">
+              <nz-descriptions-item 
+                *ngFor="let metric of getExecutionMetrics()" 
+                [nzTitle]="metric.key">
+                {{ metric.value }}
+              </nz-descriptions-item>
+            </nz-descriptions>
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="Errors" *ngIf="hasErrors()">
+          <div class="error-container">
+            <nz-alert 
+              nzType="error" 
+              [nzMessage]="'Error Details'" 
+              [nzDescription]="getErrorDetails()"
+              nzShowIcon>
+            </nz-alert>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+
+    <div class="execution-actions">
+      <button nz-button nzType="default" (click)="goBack()">
+        <i nz-icon nzType="arrow-left"></i> Back
+      </button>
+      <button 
+        nz-button 
+        nzType="primary" 
+        (click)="retryExecution()"
+        [disabled]="!canRetry()">
+        <i nz-icon nzType="reload"></i> Retry
+      </button>
+    </div>
+  </div>
+</div>

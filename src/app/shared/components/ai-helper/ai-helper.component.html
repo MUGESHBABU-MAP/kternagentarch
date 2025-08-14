@@ -1,0 +1,135 @@
+<div class="ai-helper" [class.open]="state.isOpen" [class.minimized]="state.isMinimized">
+  <!-- Header -->
+  <div class="ai-helper-header" (click)="state.isMinimized ? toggleHelper() : null">
+    <div class="header-content">
+      <i nz-icon nzType="robot" nzTheme="outline"></i>
+      <span>KTern AI Assistant</span>
+    </div>
+    <div class="header-actions">
+      <button 
+        nz-button 
+        nzType="text" 
+        nzShape="circle"
+        (click)="minimizeHelper()" 
+        *ngIf="state.isOpen && !state.isMinimized"
+        nz-tooltip
+        nzTooltipTitle="Minimize"
+      >
+        <i nz-icon nzType="minus" nzTheme="outline"></i>
+      </button>
+      <button 
+        nz-button 
+        nzType="text" 
+        nzShape="circle"
+        (click)="closeHelper()"
+        nz-tooltip
+        nzTooltipTitle="Close"
+      >
+        <i nz-icon nzType="close" nzTheme="outline"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="ai-helper-content" *ngIf="state.isOpen && !state.isMinimized">
+    <!-- Welcome Message -->
+    <div class="welcome-message" *ngIf="state.messages.length === 0">
+      <div class="welcome-content">
+        <div class="welcome-header">
+          <i nz-icon nzType="robot" nzTheme="fill" class="welcome-icon"></i>
+          <h3>How can I help you today?</h3>
+        </div>
+        <p>I'm your KTern AI assistant. Ask me anything about agents, executions, or the platform.</p>
+        
+        <div class="suggested-questions">
+          <h4>Quick Questions:</h4>
+          <div class="question-chips">
+            <nz-tag 
+              *ngFor="let question of suggestedQuestions" 
+              class="question-chip"
+              (click)="onSuggestedQuestionClick(question)"
+            >
+              {{ question }}
+            </nz-tag>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="messages-container" #messagesContainer>
+      <div 
+        *ngFor="let message of state.messages" 
+        [class]="'message ' + message.sender"
+        [attr.data-type]="message.type"
+      >
+        <div class="message-content">
+          <div class="message-sender">
+            <i 
+              [ngClass]="message.sender === 'ai' ? 'ai-icon' : 'user-icon'" 
+              nz-icon 
+              [nzType]="message.sender === 'ai' ? 'robot' : 'user'" 
+              [nzTheme]="message.sender === 'ai' ? 'fill' : 'outline'"
+            ></i>
+          </div>
+          <div class="message-text">
+            <div class="message-text-content" [innerHTML]="message.content | safeHtml"></div>
+            <div class="message-time">
+              {{ message.timestamp | date:'shortTime' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Typing Indicator -->
+      <div class="typing-indicator" *ngIf="state.isTyping">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="typing-text">AI is thinking...</div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea
+          nz-input
+          [(ngModel)]="messageControl.value"
+          (keydown)="onKeyDown($event)"
+          [nzAutosize]="{ minRows: 1, maxRows: 4 }"
+          placeholder="Type your message..."
+        ></textarea>
+        <button 
+          nz-button 
+          nzType="primary" 
+          nzShape="circle"
+          [disabled]="!messageControl.valid"
+          (click)="sendMessage()"
+          class="send-button"
+          nz-tooltip
+          nzTooltipTitle="Send message"
+        >
+          <i nz-icon nzType="arrow-up" nzTheme="outline"></i>
+        </button>
+      </div>
+      <div class="input-footer">
+        <small class="hint">Press Enter to send, Shift+Enter for new line</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Button -->
+  <button 
+    *ngIf="!state.isOpen || state.isMinimized"
+    class="floating-button"
+    nz-button 
+    nzType="primary" 
+    nzShape="circle"
+    (click)="toggleHelper()"
+  >
+    <i nz-icon nzType="robot" nzTheme="outline"></i>
+  </button>
+</div>

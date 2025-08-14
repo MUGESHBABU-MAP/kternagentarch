@@ -1,0 +1,428 @@
+<div class="agent-detail" *ngIf="!loading && agent">
+  <!-- Agent Header -->
+  <div class="agent-header">
+    <div class="header-content">
+      <div class="agent-avatar">
+        <div class="agent-avatar" [style.background-color]="agent.color || '#1890ff'">
+          <span>{{ (agent.avatar || agent.name?.charAt(0) || 'A').toUpperCase() }}</span>
+        </div>
+      </div>
+      <div class="agent-info">
+        <h1 class="agent-name">{{ agent.name }}</h1>
+        <p class="agent-description">{{ agent.description }}</p>
+        <div class="agent-meta">
+          <nz-tag [nzColor]="getStatusColor(agent.status)">
+            <nz-tag [nzColor]="agent.status === 'running' ? 'green' : 'default'">{{ agent.status }}</nz-tag>
+            <i nz-icon [nzType]="agent.status === 'running' ? 'check-circle' : 'clock-circle'"></i>
+            {{ agent.status | titlecase }}
+          </nz-tag>
+          <nz-tag [nzColor]="getPriorityColor(agent.priority)">
+            <i nz-icon nzType="flag"></i>
+            {{ agent.priority | titlecase }} Priority
+          </nz-tag>
+          <nz-tag>
+            <i nz-icon nzType="apartment"></i>
+            {{ agent.type }}
+          </nz-tag>
+          <nz-tag>
+            <i nz-icon nzType="code"></i>
+            v1.0
+          </nz-tag>
+        </div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button nz-button nzType="default" (click)="onPinAgent()" [title]="isAgentPinned() ? 'Unpin Agent' : 'Pin Agent'">
+        <i nz-icon [nzType]="isAgentPinned() ? 'pushpin' : 'pushpin'" [nzTheme]="isAgentPinned() ? 'fill' : 'outline'"></i>
+        {{ isAgentPinned() ? 'Unpin' : 'Pin' }}
+      </button>
+      <button nz-button nzType="primary" (click)="onRunAgent()" [disabled]="executing">
+        <i nz-icon [nzType]="executing ? 'loading' : 'play-circle'"></i>
+        {{ executing ? 'Running...' : 'Run Agent' }}
+      </button>
+      <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nz-dropdown>
+          <i nz-icon nzType="more"></i>
+        </button>
+        <ul nz-menu>
+          <li nz-menu-item (click)="onConfigureAgent()">
+            <i nz-icon nzType="setting"></i>
+            Configure
+          </li>
+          <li nz-menu-item (click)="onCloneAgent()">
+            <i nz-icon nzType="copy"></i>
+            Clone
+          </li>
+          <li nz-menu-item (click)="onExportAgent()">
+            <i nz-icon nzType="download"></i>
+            Export
+          </li>
+          <li nz-menu-divider></li>
+          <li nz-menu-item (click)="onDeleteAgent()" class="danger-item">
+            <i nz-icon nzType="delete"></i>
+            Delete
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
+  </div>
+
+  <!-- Agent Stats -->
+  <div class="agent-stats">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="play-circle"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ executions.length }}</div>
+        <div class="stat-label">Total Executions</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ getCompletedExecutionsCount() }}</div>
+        <div class="stat-label">Successful</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="close-circle"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ getFailedExecutionsCount() }}</div>
+        <div class="stat-label">Failed</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="apartment"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ dependencies.length }}</div>
+        <div class="stat-label">Dependencies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agent Tabs -->
+  <nz-tabset [(nzSelectedIndex)]="activeTab" (nzSelectedIndexChange)="onTabChange($event)">
+    <!-- Overview Tab -->
+    <nz-tab nzTitle="Overview">
+      <ng-template nz-tab>
+        <div class="tab-content">
+          <div class="overview-grid">
+            <!-- Configuration Section -->
+            <div class="config-section">
+              <div class="section-header">
+                <h3>Configuration</h3>
+                <button nz-button nzType="link" (click)="onEditConfiguration()">
+                  <i nz-icon nzType="edit"></i>
+                  Edit
+                </button>
+              </div>
+              <div class="config-details">
+                <div class="config-item">
+                  <span class="config-label">Agent ID:</span>
+                  <span class="agent-version">v1.0</span>
+                </div>
+                <div class="config-item">
+                  <span class="config-label">Type:</span>
+                  <span class="agent-category">{{ agent.type }}</span>
+                </div>
+                <div class="config-item">
+                  <span class="config-label">Category:</span>
+                  <div class="detail-value">{{ agent.type || 'General' }}</div>
+                </div>
+                <div class="config-item">
+                  <span class="config-label">Version:</span>
+                  <div class="detail-value">1.0.0</div>
+                </div>
+                <div class="config-item">
+                  <span class="config-label">Created:</span>
+                  <div class="detail-value">{{ agent.lastHeartbeat | date:'medium' }}</div>
+                </div>
+                <div class="config-item">
+                  <span class="config-label">Updated:</span>
+                  <div class="detail-value">{{ agent.lastHeartbeat | date:'medium' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Capabilities Section -->
+            <div class="capabilities-section">
+              <div class="section-header">
+                <h3>Capabilities</h3>
+              </div>
+              <div class="capabilities-list">
+                <nz-tag *ngFor="let capability of agent.capabilities" class="capability-tag">
+                  <i nz-icon nzType="tool"></i>
+                  {{ capability }}
+                </nz-tag>
+              </div>
+            </div>
+
+            <!-- Dependencies Section -->
+            <div class="dependencies-section">
+              <div class="section-header">
+                <h3>Dependencies ({{ dependencies.length }})</h3>
+              </div>
+              <div class="dependencies-list" *ngIf="dependencies.length > 0; else noDependencies">
+                <div class="dependency-item" *ngFor="let dep of dependencies; trackBy: trackByAgent" 
+                     (click)="onNavigateToAgent(dep.id)">
+                  <div class="dependency-icon">
+                    <i [class]="dep.uiConfig.icon" [style.color]="dep.uiConfig.color"></i>
+                  </div>
+                  <div class="dependency-info">
+                    <div class="dependency-name">{{ dep.name }}</div>
+                    <div class="dependency-status">
+                      <nz-tag [nzColor]="getStatusColor(dep.status)" nzSize="small">
+                        {{ dep.status }}
+                      </nz-tag>
+                    </div>
+                  </div>
+                  <i nz-icon nzType="right" class="dependency-arrow"></i>
+                </div>
+              </div>
+              <ng-template #noDependencies>
+                <div class="empty-state">
+                  <i nz-icon nzType="disconnect"></i>
+                  <p>No dependencies configured</p>
+                </div>
+              </ng-template>
+            </div>
+
+            <!-- Dependents Section -->
+            <div class="dependents-section">
+              <div class="section-header">
+                <h3>Dependents ({{ dependents.length }})</h3>
+              </div>
+              <div class="dependents-list" *ngIf="dependents.length > 0; else noDependents">
+                <div class="dependent-item" *ngFor="let dep of dependents; trackBy: trackByAgent" 
+                     (click)="onNavigateToAgent(dep.id)">
+                  <div class="dependent-icon">
+                    <i [class]="dep.uiConfig.icon" [style.color]="dep.uiConfig.color"></i>
+                  </div>
+                  <div class="dependent-info">
+                    <div class="dependent-name">{{ dep.name }}</div>
+                    <div class="dependent-status">
+                      <nz-tag [nzColor]="getStatusColor(dep.status)" nzSize="small">
+                        {{ dep.status }}
+                      </nz-tag>
+                    </div>
+                  </div>
+                  <i nz-icon nzType="right" class="dependent-arrow"></i>
+                </div>
+              </div>
+              <ng-template #noDependents>
+                <div class="empty-state">
+                  <i nz-icon nzType="disconnect"></i>
+                  <p>No agents depend on this one</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </nz-tab>
+
+    <!-- Executions Tab -->
+    <nz-tab nzTitle="Executions">
+      <ng-template nz-tab>
+        <div class="tab-content">
+          <div class="executions-header">
+            <h3>Execution History</h3>
+            <div class="executions-actions">
+              <button nz-button nzType="default">
+                <i nz-icon nzType="filter"></i>
+                Filter
+              </button>
+              <button nz-button nzType="default">
+                <i nz-icon nzType="download"></i>
+                Export
+              </button>
+            </div>
+          </div>
+          
+          <div class="executions-list" *ngIf="executions.length > 0; else noExecutions">
+            <div class="execution-item" *ngFor="let execution of executions; trackBy: trackByExecution"
+                 (click)="onNavigateToExecution(execution.id)">
+              <div class="execution-header">
+                <div class="execution-info">
+                  <div class="execution-id">{{ execution.id }}</div>
+                  <div class="execution-time">
+                    <i nz-icon nzType="clock-circle"></i>
+                    {{ execution.startTime | date:'medium' }}
+                  </div>
+                </div>
+                <div class="execution-status">
+                  <nz-tag [nzColor]="getStatusColor(execution.status)">
+                    <i nz-icon [nzType]="getExecutionStatusIcon(execution.status)"></i>
+                    {{ execution.status | titlecase }}
+                  </nz-tag>
+                </div>
+              </div>
+              
+              <div class="execution-details">
+                <div class="execution-duration">
+                  <span class="detail-label">Duration:</span>
+                  <span class="detail-value">{{ formatDuration(execution.startTime, execution.endTime) }}</span>
+                </div>
+                <div class="execution-progress" *ngIf="execution.status === 'running'">
+                  <span class="detail-label">Progress:</span>
+                  <nz-progress [nzPercent]="execution.progress" nzSize="small"></nz-progress>
+                </div>
+              </div>
+              
+              <div class="execution-logs" *ngIf="execution.logs && execution.logs.length > 0">
+                <div class="logs-preview">
+                  <span class="logs-label">Latest:</span>
+                  <span class="logs-message">{{ execution.logs[execution.logs.length - 1].message }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <ng-template #noExecutions>
+            <nz-empty>
+              <div class="empty-footer">
+                <div class="empty-description">
+                  No executions found for this agent.
+                </div>
+                <button nz-button nzType="primary" *ngIf="agent.status !== 'idle'" (click)="onRunAgent()">
+                  <i nz-icon nzType="play-circle"></i>
+                  Run Agent
+                </button>
+              </div>
+            </nz-empty>
+          </ng-template>
+        </div>
+      </ng-template>
+    </nz-tab>
+
+    <!-- Configuration Tab -->
+    <nz-tab nzTitle="Configuration">
+      <ng-template nz-tab>
+        <div class="tab-content">
+          <div class="config-editor">
+            <div class="config-header">
+              <h3>Agent Configuration</h3>
+              <div class="config-actions">
+                <button nz-button nzType="default">
+                  <i nz-icon nzType="reload"></i>
+                  Reset
+                </button>
+                <button nz-button nzType="primary">
+                  <i nz-icon nzType="save"></i>
+                  Save Changes
+                </button>
+              </div>
+            </div>
+            
+            <div class="config-form">
+              <nz-form-item>
+                <nz-form-label>Agent Name</nz-form-label>
+                <nz-form-control>
+                  <input nz-input [value]="agent.name" placeholder="Enter agent name">
+                </nz-form-control>
+              </nz-form-item>
+              
+              <nz-form-item>
+                <nz-form-label>Description</nz-form-label>
+                <nz-form-control>
+                  <textarea nz-input [value]="agent.description" rows="3" placeholder="Enter agent description"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+              
+              <nz-form-item>
+                <nz-form-label>Priority</nz-form-label>
+                <nz-form-control>
+                  <nz-select [ngModel]="agent.priority" style="width: 200px;">
+                    <nz-option nzValue="high" nzLabel="High"></nz-option>
+                    <nz-option nzValue="medium" nzLabel="Medium"></nz-option>
+                    <nz-option nzValue="low" nzLabel="Low"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              
+              <nz-form-item>
+                <nz-form-label>Status</nz-form-label>
+                <nz-form-control>
+                  <nz-select [ngModel]="agent.status" style="width: 200px;">
+                    <nz-option nzValue="active" nzLabel="Active"></nz-option>
+                    <nz-option nzValue="idle" nzLabel="Idle"></nz-option>
+                    <nz-option nzValue="disabled" nzLabel="Disabled"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </nz-tab>
+
+    <!-- Logs Tab -->
+    <nz-tab nzTitle="Logs">
+      <ng-template nz-tab>
+        <div class="tab-content">
+          <div class="logs-viewer">
+            <div class="logs-header">
+              <h3>Agent Logs</h3>
+              <div class="logs-controls">
+                <nz-select ngModel="all" style="width: 120px;">
+                  <nz-option nzValue="all" nzLabel="All Levels"></nz-option>
+                  <nz-option nzValue="error" nzLabel="Error"></nz-option>
+                  <nz-option nzValue="warn" nzLabel="Warning"></nz-option>
+                  <nz-option nzValue="info" nzLabel="Info"></nz-option>
+                  <nz-option nzValue="debug" nzLabel="Debug"></nz-option>
+                </nz-select>
+                <button nz-button nzType="default">
+                  <i nz-icon nzType="reload"></i>
+                  Refresh
+                </button>
+                <button nz-button nzType="default">
+                  <i nz-icon nzType="download"></i>
+                  Download
+                </button>
+              </div>
+            </div>
+            
+            <div class="logs-content">
+              <div class="log-entry" *ngFor="let log of executionLogs">
+                <span class="log-time">{{ log.timestamp | date:'HH:mm:ss.SSS' }}</span>
+                <span class="log-level" [class]="'log-' + log.type">{{ log.type.toUpperCase() }}</span>
+                <span class="log-message">{{ log.message }}</span>
+              </div>
+              
+              <div class="empty-logs" *ngIf="!executionLogs.length">
+                <i nz-icon nzType="file-text"></i>
+                <p>No logs available</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <nz-spin nzSize="large">
+    <div class="loading-text">Loading agent details...</div>
+  </nz-spin>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="!loading && !agent">
+  <nz-result nzStatus="404" nzTitle="Agent Not Found" nzSubTitle="The requested agent could not be found.">
+    <div nz-result-extra>
+      <button nz-button nzType="primary" routerLink="/agents">
+        <i nz-icon nzType="arrow-left"></i>
+        Back to Agents
+      </button>
+    </div>
+  </nz-result>
+</div>

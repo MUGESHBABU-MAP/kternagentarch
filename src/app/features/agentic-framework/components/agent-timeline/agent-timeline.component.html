@@ -1,0 +1,68 @@
+<div class="agent-timeline">
+  <div class="timeline-container" *ngIf="!loading && agents && agents.length > 0">
+    <nz-timeline>
+      <nz-timeline-item 
+        *ngFor="let agent of agents; trackBy: trackByAgent"
+        [nzColor]="getStatusColor(agent && agent.status)">
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div class="timeline-info">
+              <div class="timeline-date">{{ getTimelineDate(agent) }}</div>
+              <div class="timeline-time">{{ getTimelineTime(agent) }}</div>
+            </div>
+            <div class="timeline-status" *ngIf="agent && agent.status">
+              <nz-tag [nzColor]="getStatusColor(agent.status)" nzSize="small">
+                {{ agent.status | titlecase }}
+              </nz-tag>
+            </div>
+          </div>
+          
+          <div class="timeline-agent" (click)="onAgentClick(agent)" *ngIf="agent">
+            <div class="agent-icon">
+              <i [class]="(agent && agent.uiConfig && agent.uiConfig.icon) ? agent.uiConfig.icon : 'anticon-robot'" 
+                 [style.color]="(agent && agent.uiConfig && agent.uiConfig.color) ? agent.uiConfig.color : '#1890ff'"></i>
+            </div>
+            <div class="agent-details">
+              <h4 class="agent-name">{{ agent && agent.name ? agent.name : 'Unnamed Agent' }}</h4>
+              <p class="agent-description">{{ agent && agent.description ? agent.description : 'No description available' }}</p>
+              <div class="agent-meta">
+                <span class="agent-category">{{ agent && agent.type ? agent.type : 'Uncategorized' }}</span>
+                <span class="agent-version" *ngIf="agent && agent.version">v{{ agent.version }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-actions">
+            <button nz-button nzType="text" nzSize="small" (click)="onAgentPin(agent)">
+              <i nz-icon nzType="pushpin"></i>
+              Pin
+            </button>
+            <button nz-button nzType="text" nzSize="small" (click)="onAgentRun(agent)">
+              <i nz-icon nzType="play-circle"></i>
+              Run
+            </button>
+            <button nz-button nzType="text" nzSize="small" (click)="onAgentConfigure(agent)">
+              <i nz-icon nzType="setting"></i>
+              Configure
+            </button>
+          </div>
+        </div>
+      </nz-timeline-item>
+    </nz-timeline>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">Loading timeline...</div>
+    </nz-spin>
+  </div>
+
+  <div class="empty-container" *ngIf="!loading && agents.length === 0">
+    <nz-empty>
+      <div class="empty-footer">
+        <div class="empty-message">{{ emptyMessage }}</div>
+        <div class="empty-description">{{ emptyDescription }}</div>
+      </div>
+    </nz-empty>
+  </div>
+</div>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 
-import { DigitalMapsLayoutComponent } from './components/digital-maps-layout/digital-maps-layout.component';
+// Layout component removed to use shared main layout
 import { DigitalMapsOverviewComponent } from './components/digital-maps-overview/digital-maps-overview.component';
 import { MapDashboardComponent } from './components/map-dashboard/map-dashboard.component';
 import { ProcessFlowsComponent } from './components/process-flows/process-flows.component';
@@ -14,29 +14,34 @@ import { AssessmentComponent } from './components/assessment/assessment.componen
 const routes = [
   {
     path: '',
-    component: DigitalMapsLayoutComponent,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: DigitalMapsOverviewComponent },
-      { path: 'maps', component: MapDashboardComponent },
-      { path: 'processes', component: ProcessFlowsComponent },
-      { path: 'collaboration', component: CollaborationComponent },
-      { path: 'documentation', component: DocumentationComponent },
+      { path: 'overview', component: DigitalMapsOverviewComponent, data: { title: 'Overview', breadcrumb: 'Overview' } },
+      { path: 'maps', component: MapDashboardComponent, data: { title: 'Maps', breadcrumb: 'Maps' } },
+      { path: 'processes', component: ProcessFlowsComponent, data: { title: 'Processes', breadcrumb: 'Processes' } },
+      { path: 'collaboration', component: CollaborationComponent, data: { title: 'Collaboration', breadcrumb: 'Collaboration' } },
+      { path: 'documentation', component: DocumentationComponent, data: { title: 'Documentation', breadcrumb: 'Documentation' } },
       { 
         path: 'assessment', 
-        loadChildren: () => import('./components/assessment/assessment.module').then(m => m.AssessmentModule)
+        loadChildren: () => import('./components/assessment/assessment.module').then(m => m.AssessmentModule),
+        data: { breadcrumb: 'Assessment' }
       },
-      { 
-        path: 'agentic-assessment', 
-        loadChildren: () => import('../agentic-assessment/agentic-assessment.module').then(m => m.AgenticAssessmentModule)
-      }
+      // { 
+      //   path: 'agentic-assessment', 
+      //   loadChildren: () => import('../agentic-assessment/agentic-assessment.module').then(m => m.AgenticAssessmentModule),
+      //   data: { breadcrumb: 'Agentic Assessment' }
+      // },
+      // {
+      //   path: 'agents',
+      //   loadChildren: () => import('../agentic-framework/agentic-framework.module').then(m => m.AgenticFrameworkModule),
+      //   data: { breadcrumb: 'Agents' }
+      // }
     ]
   }
 ];
 
 @NgModule({
   declarations: [
-    DigitalMapsLayoutComponent,
     DigitalMapsOverviewComponent,
     MapDashboardComponent,
     ProcessFlowsComponent,
@@ -48,6 +53,7 @@ const routes = [
     CommonModule,
     SharedModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  exports: []
 })
 export class DigitalMapsModule { }

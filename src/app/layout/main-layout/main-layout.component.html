@@ -1,0 +1,61 @@
+<div class="app-container">
+  <!-- Only show sidebar if not in assessment flow -->
+  <div *ngIf="!isAssessmentRoute()" class="sidebar" [class.sidebar-collapsed]="sidebarCollapsed" [class.sidebar-expanded]="!sidebarCollapsed">
+    <!-- Logo Section -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <div class="flex items-center gap-3" *ngIf="!sidebarCollapsed">
+        <span class="font-semibold text-lg text-gray-900">KTern</span>
+      </div>
+      <button 
+        nz-button 
+        nzType="text" 
+        nzSize="small"
+        (click)="toggleSidebar()"
+        class="transition-fast"
+      >
+        <i nz-icon [nzType]="sidebarCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="flex-1 overflow-y-auto py-4">
+      <ul nz-menu nzMode="inline" nzTheme="light">
+        <li 
+          *ngFor="let item of navigationItems"
+          nz-menu-item
+          [nzSelected]="isRouteActive(item.route)"
+          (click)="navigateTo(item.route)"
+          class="cursor-pointer"
+        >
+          <i nz-icon [nzType]="item.icon" class="mr-3"></i>
+          <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- User Section -->
+    <div class="border-t p-4">
+      <div class="flex items-center gap-3">
+        <nz-avatar nzSize="small" nzText="JD" class="bg-primary"></nz-avatar>
+        <div class="flex-1 min-w-0" *ngIf="!sidebarCollapsed">
+          <div class="text-sm font-medium text-gray-900 truncate">John Doe</div>
+          <nz-tag [nzColor]="getRoleColor('developer')" nzSize="small" class="mt-1">
+            Developer
+          </nz-tag>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Helper -->
+  <app-ai-helper></app-ai-helper>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.main-content-full]="isAssessmentRoute()" [class.main-content-collapsed]="sidebarCollapsed && !isAssessmentRoute()" [class.main-content-expanded]="!sidebarCollapsed && !isAssessmentRoute()">
+    <!-- Router Outlet -->
+    <router-outlet></router-outlet>
+    
+    <!-- AI Helper -->
+    <app-ai-helper></app-ai-helper>
+  </div>
+</div>

@@ -1,0 +1,189 @@
+<div class="my-agents">
+  <!-- Header Section -->
+  <div class="agents-header">
+    <div class="header-content">
+      <h2 class="page-title">
+        <i nz-icon nzType="user" nzTheme="outline"></i>
+        My Agents
+      </h2>
+      <p class="page-description">
+        Manage your personal collection of agents. Create, configure, and organize agents according to your workflow needs.
+      </p>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        nz-button 
+        nzType="default" 
+        (click)="importAgent()">
+        <i nz-icon nzType="import" nzTheme="outline"></i>
+        Import Agent
+      </button>
+      
+      <button 
+        nz-button 
+        nzType="primary" 
+        (click)="createNewAgent()">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+        Create Agent
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="appstore" nzTheme="outline"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ myAgents.length }}</div>
+        <div class="stat-label">Total Agents</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="folder" nzTheme="outline"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ getUniqueCategories().length }}</div>
+        <div class="stat-label">Categories</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ recentAgents.length }}</div>
+        <div class="stat-label">Recently Used</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">Loading your agents...</div>
+    </nz-spin>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="agents-content" *ngIf="!loading">
+    <!-- Recent Agents Section -->
+    <div class="content-section" *ngIf="recentAgents.length > 0">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
+          Recently Used
+        </h3>
+        <div class="section-actions">
+          <button nz-button nzType="link" nzSize="small">
+            View All
+          </button>
+        </div>
+      </div>
+      
+      <div class="section-content">
+        <!-- Grid View -->
+        <div class="agents-grid" *ngIf="viewMode === 'grid'">
+          <app-agent-card
+            *ngFor="let agent of recentAgents.slice(0, 6)"
+            [agent]="agent"
+            [showActions]="true"
+            [compact]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-card>
+        </div>
+
+        <!-- List View -->
+        <div class="agents-list" *ngIf="viewMode === 'list'">
+          <app-agent-list
+            [agents]="recentAgents.slice(0, 6)"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-list>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Agents by Category -->
+    <div class="content-section" *ngFor="let category of getUniqueCategories()">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i nz-icon nzType="folder" nzTheme="outline"></i>
+          {{ category | titlecase }}
+        </h3>
+        <div class="section-meta">
+          <nz-badge [nzCount]="getAgentsByCategory(category).length" nzStatus="default">
+          </nz-badge>
+        </div>
+      </div>
+      
+      <div class="section-content">
+        <!-- Grid View -->
+        <div class="agents-grid" *ngIf="viewMode === 'grid'">
+          <app-agent-card
+            *ngFor="let agent of getAgentsByCategory(category)"
+            [agent]="agent"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-card>
+        </div>
+
+        <!-- List View -->
+        <div class="agents-list" *ngIf="viewMode === 'list'">
+          <app-agent-list
+            [agents]="getAgentsByCategory(category)"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-list>
+        </div>
+
+        <!-- Timeline View -->
+        <div class="agents-timeline" *ngIf="viewMode === 'timeline'">
+          <app-agent-timeline
+            [agents]="getAgentsByCategory(category)"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentPin)="onAgentPin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-timeline>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-agents" *ngIf="myAgents.length === 0 && !loading">
+      <nz-empty 
+        nzNotFoundImage="simple" 
+        nzNotFoundContent="You don't have any agents yet">
+        <div class="empty-footer">
+          <button nz-button nzType="primary" (click)="createNewAgent()">
+            <i nz-icon nzType="plus" nzTheme="outline"></i>
+            Create Your First Agent
+          </button>
+          <button nz-button nzType="default" (click)="importAgent()">
+            <i nz-icon nzType="import" nzTheme="outline"></i>
+            Import Agent
+          </button>
+        </div>
+      </nz-empty>
+    </div>
+  </div>
+</div>

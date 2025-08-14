@@ -1,0 +1,107 @@
+<div class="agent-card" [class.compact]="compact" (click)="onCardClick()">
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="agent-icon" [style.background-color]="agent.ui.color">
+      <i nz-icon [nzType]="agent.ui.icon" nzTheme="outline"></i>
+    </div>
+    
+    <div class="agent-info">
+      <h3 class="agent-name">{{ agent.name }}</h3>
+      <div class="agent-meta">
+        <span class="agent-type">{{ agent.type }}</span>
+        <span class="agent-version">v{{ agent.version }}</span>
+      </div>
+    </div>
+
+    <div class="card-actions" *ngIf="showActions">
+      <button 
+        nz-button 
+        nzType="text" 
+        nzSize="small"
+        [class.pinned]="isPinned"
+        (click)="onPinClick($event)"
+        nz-tooltip
+        [nzTooltipTitle]="isPinned ? 'Unpin agent' : 'Pin agent'">
+        <i nz-icon [nzType]="isPinned ? 'pushpin' : 'pushpin'" nzTheme="outline"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Card Content -->
+  <div class="card-content">
+    <p class="agent-description">{{ agent.description }}</p>
+    
+    <!-- Agent Tags -->
+    <div class="agent-tags" *ngIf="agent.tags.length > 0">
+      <nz-tag 
+        *ngFor="let tag of agent.tags.slice(0, 3)" 
+        nzSize="small"
+        [nzColor]="agent.ui.color">
+        {{ tag }}
+      </nz-tag>
+      <nz-tag 
+        *ngIf="agent.tags.length > 3" 
+        nzSize="small"
+        nzColor="default">
+        +{{ agent.tags.length - 3 }}
+      </nz-tag>
+    </div>
+
+    <!-- Agent Stats -->
+    <div class="agent-stats" *ngIf="!compact">
+      <div class="stat-item">
+        <i nz-icon nzType="setting" nzTheme="outline"></i>
+        <span>{{ getRequiredParametersCount() }} params</span>
+      </div>
+      <div class="stat-item" *ngIf="getDependenciesCount() > 0">
+        <i nz-icon nzType="link" nzTheme="outline"></i>
+        <span>{{ getDependenciesCount() }} deps</span>
+      </div>
+      <div class="stat-item">
+        <i nz-icon nzType="export" nzTheme="outline"></i>
+        <span>{{ getOutputsCount() }} outputs</span>
+      </div>
+      <div class="stat-item">
+        <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
+        <span>{{ getLifecycleStagesCount() }} stages</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Footer -->
+  <div class="card-footer" *ngIf="showActions">
+    <div class="footer-actions">
+      <button 
+        nz-button 
+        nzType="default" 
+        nzSize="small"
+        (click)="onConfigureClick($event)">
+        <i nz-icon nzType="setting" nzTheme="outline"></i>
+        Configure
+      </button>
+      
+      <button 
+        nz-button 
+        nzType="primary" 
+        nzSize="small"
+        (click)="onExecuteClick($event)">
+        <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+        Execute
+      </button>
+    </div>
+  </div>
+
+  <!-- Hover Overlay -->
+  <div class="card-overlay">
+    <div class="overlay-content">
+      <h4>{{ agent.name }}</h4>
+      <p>{{ agent.description }}</p>
+      <div class="overlay-actions">
+        <button nz-button nzType="primary" nzGhost>
+          <i nz-icon nzType="eye" nzTheme="outline"></i>
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

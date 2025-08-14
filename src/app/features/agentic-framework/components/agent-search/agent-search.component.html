@@ -1,0 +1,23 @@
+<div class="agent-search">
+  <nz-input-group nzSize="large" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+    <input 
+      type="text" 
+      nz-input 
+      [placeholder]="placeholder"
+      [formControl]="searchControl" />
+  </nz-input-group>
+  
+  <ng-template #prefixTemplate>
+    <i nz-icon nzType="search" nzTheme="outline"></i>
+  </ng-template>
+  
+  <ng-template #suffixTemplate>
+    <i 
+      *ngIf="searchControl.value" 
+      nz-icon 
+      nzType="close-circle" 
+      nzTheme="fill" 
+      class="clear-icon"
+      (click)="clearSearch()"></i>
+  </ng-template>
+</div>

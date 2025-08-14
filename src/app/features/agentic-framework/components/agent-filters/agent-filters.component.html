@@ -1,0 +1,71 @@
+<div class="agent-filters">
+  <div class="filters-container">
+    <!-- Category Filter -->
+    <div class="filter-group">
+      <label class="filter-label">Categories</label>
+      <nz-select
+        nzMode="multiple"
+        nzPlaceHolder="Select categories"
+        [ngModel]="filters.categories"
+        (ngModelChange)="onCategoryChange($event)"
+        nzSize="small"
+        class="filter-select">
+        <nz-option 
+          *ngFor="let category of categories" 
+          [nzValue]="category.id" 
+          [nzLabel]="category.name">
+          <i nz-icon [nzType]="category.icon" nzTheme="outline"></i>
+          {{ category.name }}
+        </nz-option>
+      </nz-select>
+    </div>
+
+    <!-- Status Filter -->
+    <div class="filter-group">
+      <label class="filter-label">Status</label>
+      <nz-select
+        nzMode="multiple"
+        nzPlaceHolder="Select status"
+        [ngModel]="filters.statuses"
+        (ngModelChange)="onStatusChange($event)"
+        nzSize="small"
+        class="filter-select">
+        <nz-option 
+          *ngFor="let status of statusOptions" 
+          [nzValue]="status.value" 
+          [nzLabel]="status.label">
+        </nz-option>
+      </nz-select>
+    </div>
+
+    <!-- Priority Filter -->
+    <div class="filter-group">
+      <label class="filter-label">Priority</label>
+      <nz-select
+        nzMode="multiple"
+        nzPlaceHolder="Select priority"
+        [ngModel]="filters.priorities"
+        (ngModelChange)="onPriorityChange($event)"
+        nzSize="small"
+        class="filter-select">
+        <nz-option 
+          *ngFor="let priority of priorityOptions" 
+          [nzValue]="priority.value" 
+          [nzLabel]="priority.label">
+        </nz-option>
+      </nz-select>
+    </div>
+
+    <!-- Clear Filters -->
+    <div class="filter-actions" *ngIf="hasActiveFilters()">
+      <button 
+        nz-button 
+        nzType="link" 
+        nzSize="small"
+        (click)="clearAllFilters()">
+        <i nz-icon nzType="close" nzTheme="outline"></i>
+        Clear All
+      </button>
+    </div>
+  </div>
+</div>

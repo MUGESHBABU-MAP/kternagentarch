@@ -1,0 +1,27 @@
+<div class="agent-grid">
+  <div class="grid-container" *ngIf="!loading && agents.length > 0">
+    <app-agent-card
+      *ngFor="let agent of agents; trackBy: trackByAgent"
+      [agent]="agent"
+      (agentClick)="onAgentClick(agent)"
+      (agentPin)="onAgentPin(agent)"
+      (agentRun)="onAgentRun(agent)"
+      (agentConfigure)="onAgentConfigure(agent)">
+    </app-agent-card>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">Loading agents...</div>
+    </nz-spin>
+  </div>
+
+  <div class="empty-container" *ngIf="!loading && agents.length === 0">
+    <nz-empty>
+      <div class="empty-footer">
+        <div class="empty-message">{{ emptyMessage }}</div>
+        <div class="empty-description">{{ emptyDescription }}</div>
+      </div>
+    </nz-empty>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+.agent-filters {
+  .filters-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+
+      .filter-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #666;
+        margin: 0;
+      }
+
+      .filter-select {
+        min-width: 140px;
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 2px;
+
+      button {
+        color: #ff4d4f;
+        padding: 0;
+        height: auto;
+        
+        &:hover {
+          color: #ff7875;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .agent-filters {
+    .filters-container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .filter-group {
+        min-width: auto;
+
+        .filter-select {
+          min-width: auto;
+          width: 100%;
+        }
+      }
+
+      .filter-actions {
+        align-items: center;
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .agent-filters {
+    .filter-label {
+      color: #bfbfbf;
+    }
+  }
+}

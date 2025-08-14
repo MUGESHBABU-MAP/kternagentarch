@@ -1,23 +1,12 @@
 <div class="assessment-container">
-  <!-- Assessment Header -->
-  <div class="assessment-header">
-    <div class="header-content">
-      <div class="header-left">
-        <h1 class="assessment-title">
-          <i nz-icon nzType="audit" class="title-icon"></i>
-          Digital Maps Assessment
-        </h1>
-        <p class="assessment-subtitle">Complete your SAP system assessment in 5 simple steps</p>
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-info">
+      <span class="progress-text">Step {{ currentStepIndex + 1 }} of {{ wizardSteps.length }}</span>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
       </div>
-      <div class="header-right">
-        <div class="progress-info">
-          <span class="progress-text">Step {{ currentStepIndex + 1 }} of {{ wizardSteps.length }}</span>
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="getOverallProgress()"></div>
-          </div>
-          <span class="progress-percentage">{{ getOverallProgress() | number:'1.0-0' }}%</span>
-        </div>
-      </div>
+      <span class="progress-percentage">{{ getOverallProgress() | number:'1.0-0' }}%</span>
     </div>
   </div>
 

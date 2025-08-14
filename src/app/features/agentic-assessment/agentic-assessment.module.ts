@@ -6,7 +6,6 @@ import { SharedModule } from '../../shared/shared.module';
 
 
 // Components
-import { AgenticAssessmentLayoutComponent } from './components/agentic-assessment-layout/agentic-assessment-layout.component';
 import { AgentOrchestrationComponent } from './components/agent-orchestration/agent-orchestration.component';
 import { AgentCardComponent } from './components/agent-card/agent-card.component';
 import { AgentTimelineComponent } from './components/agent-timeline/agent-timeline.component';
@@ -19,18 +18,29 @@ import { AgentDashboardComponent } from './components/agent-dashboard/agent-dash
 const routes = [
   {
     path: '',
-    component: AgenticAssessmentLayoutComponent,
     children: [
-      { path: '', redirectTo: 'orchestration', pathMatch: 'full' },
-      { path: 'orchestration', component: AgentOrchestrationComponent },
-      { path: 'dashboard', component: AgentDashboardComponent }
+      { 
+        path: '', 
+        redirectTo: 'orchestration', 
+        pathMatch: 'full',
+        data: { breadcrumb: 'Agentic Assessment' }
+      },
+      { 
+        path: 'orchestration', 
+        component: AgentOrchestrationComponent,
+        data: { title: 'Agent Orchestration', breadcrumb: 'Orchestration' }
+      },
+      { 
+        path: 'dashboard', 
+        component: AgentDashboardComponent,
+        data: { title: 'Agent Dashboard', breadcrumb: 'Dashboard' }
+      }
     ]
   }
 ];
 
 @NgModule({
   declarations: [
-    AgenticAssessmentLayoutComponent,
     AgentOrchestrationComponent,
     AgentCardComponent,
     AgentTimelineComponent,

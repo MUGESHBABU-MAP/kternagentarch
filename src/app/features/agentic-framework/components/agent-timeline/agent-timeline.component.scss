@@ -1,0 +1,318 @@
+.agent-timeline {
+  .timeline-container {
+    padding: 16px 0;
+
+    nz-timeline {
+      .timeline-content {
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 20px;
+        margin-left: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #1890ff;
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.1);
+          transform: translateY(-2px);
+        }
+
+        .timeline-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+
+          .timeline-info {
+            .timeline-date {
+              font-size: 14px;
+              font-weight: 600;
+              color: #262626;
+              margin-bottom: 4px;
+            }
+
+            .timeline-time {
+              font-size: 12px;
+              color: #999;
+            }
+          }
+
+          .timeline-status {
+            nz-tag {
+              font-weight: 500;
+            }
+          }
+        }
+
+        .timeline-agent {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            .agent-name {
+              color: #1890ff;
+            }
+          }
+
+          .agent-icon {
+            width: 48px;
+            height: 48px;
+            background: #f0f9ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            i {
+              font-size: 24px;
+            }
+          }
+
+          .agent-details {
+            flex: 1;
+
+            .agent-name {
+              margin: 0 0 8px 0;
+              font-size: 18px;
+              font-weight: 600;
+              color: #262626;
+              line-height: 1.2;
+              transition: color 0.2s ease;
+            }
+
+            .agent-description {
+              margin: 0 0 12px 0;
+              font-size: 14px;
+              color: #666;
+              line-height: 1.5;
+            }
+
+            .agent-meta {
+              display: flex;
+              gap: 12px;
+              font-size: 12px;
+
+              .agent-category {
+                background: #f6ffed;
+                color: #52c41a;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: 500;
+              }
+
+              .agent-version {
+                background: #f0f9ff;
+                color: #1890ff;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+
+        .timeline-actions {
+          display: flex;
+          gap: 8px;
+          justify-content: flex-end;
+          padding-top: 12px;
+          border-top: 1px solid #f0f0f0;
+
+          button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+
+    .loading-text {
+      margin-top: 16px;
+      color: #666;
+      font-size: 16px;
+    }
+  }
+
+  .empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+
+    nz-empty-footer {
+      .empty-message {
+        font-size: 16px;
+        font-weight: 500;
+        color: #262626;
+        margin-bottom: 8px;
+      }
+
+      .empty-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .agent-timeline {
+    .timeline-container {
+      nz-timeline {
+        .timeline-content {
+          margin-left: 8px;
+          padding: 16px;
+
+          .timeline-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+
+          .timeline-agent {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+
+            .agent-icon {
+              width: 40px;
+              height: 40px;
+
+              i {
+                font-size: 20px;
+              }
+            }
+
+            .agent-details {
+              .agent-name {
+                font-size: 16px;
+              }
+
+              .agent-description {
+                font-size: 13px;
+              }
+
+              .agent-meta {
+                justify-content: center;
+              }
+            }
+          }
+
+          .timeline-actions {
+            justify-content: stretch;
+
+            button {
+              flex: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .agent-timeline {
+    .timeline-container {
+      nz-timeline {
+        .timeline-content {
+          background: #1f1f1f;
+          border-color: #303030;
+
+          &:hover {
+            border-color: #177ddc;
+            box-shadow: 0 4px 12px rgba(23, 125, 220, 0.1);
+          }
+
+          .timeline-header {
+            .timeline-info {
+              .timeline-date {
+                color: #fff;
+              }
+
+              .timeline-time {
+                color: #8c8c8c;
+              }
+            }
+          }
+
+          .timeline-agent {
+            &:hover {
+              .agent-name {
+                color: #177ddc;
+              }
+            }
+
+            .agent-icon {
+              background: #111b26;
+            }
+
+            .agent-details {
+              .agent-name {
+                color: #fff;
+              }
+
+              .agent-description {
+                color: #bfbfbf;
+              }
+
+              .agent-meta {
+                .agent-category {
+                  background: #162312;
+                  color: #52c41a;
+                }
+
+                .agent-version {
+                  background: #111b26;
+                  color: #177ddc;
+                }
+              }
+            }
+          }
+
+          .timeline-actions {
+            border-color: #303030;
+          }
+        }
+      }
+    }
+
+    .loading-container {
+      .loading-text {
+        color: #bfbfbf;
+      }
+    }
+
+    .empty-container {
+      nz-empty-footer {
+        .empty-message {
+          color: #fff;
+        }
+
+        .empty-description {
+          color: #bfbfbf;
+        }
+      }
+    }
+  }
+}

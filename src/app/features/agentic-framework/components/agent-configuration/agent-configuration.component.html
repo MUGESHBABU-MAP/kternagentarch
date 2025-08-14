@@ -1,0 +1,266 @@
+<div class="agent-configuration" *ngIf="agent">
+  <div class="config-header">
+    <h3>Agent Configuration</h3>
+    <div class="config-actions">
+      <button nz-button nzType="default" *ngIf="!isEditMode" (click)="toggleEditMode()">
+        <i nz-icon nzType="edit"></i>
+        Edit
+      </button>
+      <button nz-button nzType="default" *ngIf="isEditMode" (click)="cancelEdit()">
+        <i nz-icon nzType="close"></i>
+        Cancel
+      </button>
+      <button nz-button nzType="primary" *ngIf="isEditMode" (click)="saveConfiguration()">
+        <i nz-icon nzType="save"></i>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="config-content">
+    <!-- Basic Information -->
+    <div class="config-section">
+      <h4>Basic Information</h4>
+      <div class="config-form">
+        <nz-form-item>
+          <nz-form-label>Agent Name</nz-form-label>
+          <nz-form-control>
+            <input nz-input 
+                   [value]="getConfigValue('name')" 
+                   [disabled]="!isEditMode"
+                   (input)="editedAgent && (editedAgent.name = $event.target.value)"
+                   placeholder="Enter agent name">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Description</nz-form-label>
+          <nz-form-control>
+            <textarea nz-input 
+                      [value]="getConfigValue('color')" 
+                      [disabled]="!isEditMode"
+                      (input)="editedAgent && (editedAgent.description = $event.target.value)"
+                      rows="3" 
+                      placeholder="Enter agent description">
+            </textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Type</nz-form-label>
+          <nz-form-control>
+            <nz-select [ngModel]="getConfigValue('type')" 
+                       [disabled]="!isEditMode"
+                       (ngModelChange)="editedAgent && (editedAgent.type = $event)"
+                       style="width: 200px;">
+              <nz-option nzValue="automation" nzLabel="Automation"></nz-option>
+              <nz-option nzValue="analysis" nzLabel="Analysis"></nz-option>
+              <nz-option nzValue="monitoring" nzLabel="Monitoring"></nz-option>
+              <nz-option nzValue="integration" nzLabel="Integration"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Category</nz-form-label>
+          <nz-form-control>
+            <nz-select [ngModel]="getConfigValue('type')" 
+                       [disabled]="!isEditMode"
+                       (ngModelChange)="editedAgent && (editedAgent.type = $event)"
+                       style="width: 200px;">
+              <nz-option nzValue="Data Processing" nzLabel="Data Processing"></nz-option>
+              <nz-option nzValue="System Integration" nzLabel="System Integration"></nz-option>
+              <nz-option nzValue="Business Logic" nzLabel="Business Logic"></nz-option>
+              <nz-option nzValue="User Interface" nzLabel="User Interface"></nz-option>
+              <nz-option nzValue="Security" nzLabel="Security"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Priority</nz-form-label>
+          <nz-form-control>
+            <nz-select [ngModel]="getConfigValue('type')" [disabled]="!isEditMode"
+                       (ngModelChange)="editedAgent && (editedAgent.priority = $event)"
+                       style="width: 200px;">
+              <nz-option nzValue="high" nzLabel="High"></nz-option>
+              <nz-option nzValue="medium" nzLabel="Medium"></nz-option>
+              <nz-option nzValue="low" nzLabel="Low"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Status</nz-form-label>
+          <nz-form-control>
+            <nz-select [ngModel]="getConfigValue('status')" 
+                       [disabled]="!isEditMode"
+                       (ngModelChange)="editedAgent && (editedAgent.status = $event)"
+                       style="width: 200px;">
+              <nz-option nzValue="active" nzLabel="Active"></nz-option>
+              <nz-option nzValue="idle" nzLabel="Idle"></nz-option>
+              <nz-option nzValue="disabled" nzLabel="Disabled"></nz-option>
+              <nz-option nzValue="configuring" nzLabel="Configuring"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Version</nz-form-label>
+          <nz-form-control>
+            <input nz-input 
+                   [value]="getConfigValue('color')" 
+                   [disabled]="!isEditMode"
+                   (input)="editedAgent && (editedAgent.color = $event.target.value)"
+                   placeholder="Enter version">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">Color</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input [(ngModel)]="editedAgent && editedAgent.color" placeholder="Enter color code">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <!-- Capabilities -->
+    <div class="config-section">
+      <div class="section-header">
+        <h4>Capabilities</h4>
+        <button nz-button nzType="text" nzSize="small" *ngIf="isEditMode" (click)="onAddCapability()">
+          <i nz-icon nzType="plus"></i>
+          Add Capability
+        </button>
+      </div>
+      <div class="capabilities-list">
+        <div class="capability-item" *ngFor="let capability of editableConfig?.capabilities; let i = index">
+          <input nz-input 
+                 [value]="capability" 
+                 [disabled]="!isEditMode"
+                 (input)="onCapabilityChange(i, $event.target.value)"
+                 placeholder="Enter capability">
+          <button nz-button nzType="text" nzSize="small" 
+                  *ngIf="isEditMode" 
+                  (click)="onRemoveCapability(i)"
+                  class="remove-btn">
+            <i nz-icon nzType="close"></i>
+          </button>
+        </div>
+        <div class="empty-capabilities" *ngIf="!editableConfig || !editableConfig.capabilities?.length">
+          <i nz-icon nzType="tool"></i>
+          <p>No capabilities configured</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dependencies -->
+    <div class="config-section">
+      <div class="section-header">
+        <h4>Dependencies</h4>
+        <button nz-button nzType="text" nzSize="small" *ngIf="isEditMode" (click)="onAddDependency()">
+          <i nz-icon nzType="plus"></i>
+          Add Dependency
+        </button>
+      </div>
+      <div class="dependencies-list">
+        <div class="dependency-item" *ngFor="let dependency of editableConfig?.dependencies; let i = index">
+          <input nz-input 
+                 [value]="dependency" 
+                 [disabled]="!isEditMode"
+                 (input)="onDependencyChange(i, $event.target.value)"
+                 placeholder="Enter agent ID">
+          <button nz-button nzType="text" nzSize="small" 
+                  *ngIf="isEditMode" 
+                  (click)="onRemoveDependency(i)"
+                  class="remove-btn">
+            <i nz-icon nzType="close"></i>
+          </button>
+        </div>
+        <div class="empty-dependencies" *ngIf="!editableConfig || !editableConfig.dependencies?.length">
+          <i nz-icon nzType="disconnect"></i>
+          <p>No dependencies configured</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- UI Configuration -->
+    <div class="config-section">
+      <h4>UI Configuration</h4>
+      <div class="config-form">
+        <nz-form-item>
+          <nz-form-label>Icon</nz-form-label>
+          <nz-form-control>
+            <input nz-input 
+                   [value]="getConfigValue('avatar')" 
+                   [disabled]="!isEditMode"
+                   (input)="editedAgent && (editedAgent.avatar = $event.target.value)"
+                   placeholder="Enter icon class">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Avatar</nz-form-label>
+          <nz-form-control>
+            <input nz-input 
+       [value]="getConfigValue('avatar')" 
+       [disabled]="!isEditMode"
+       (input)="editedAgent && (editedAgent.avatar = $event.target.value)"
+       placeholder="Enter avatar URL">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Color</nz-form-label>
+          <nz-form-control>
+            <input nz-input 
+                   [value]="getConfigValue('color')" 
+                   [disabled]="!isEditMode"
+                   (input)="editedAgent && (editedAgent.color = $event.target.value)"
+                   placeholder="Enter color code">
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Theme</nz-form-label>
+          <nz-form-control>
+            <nz-select [ngModel]="getConfigValue('color')" 
+                       [disabled]="!isEditMode"
+                       (ngModelChange)="editedAgent && (editedAgent.color = $event)"
+                       style="width: 200px;">
+              <nz-option nzValue="default" nzLabel="Default"></nz-option>
+              <nz-option nzValue="primary" nzLabel="Primary"></nz-option>
+              <nz-option nzValue="success" nzLabel="Success"></nz-option>
+              <nz-option nzValue="warning" nzLabel="Warning"></nz-option>
+              <nz-option nzValue="danger" nzLabel="Danger"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+
+    <!-- Metadata -->
+    <div class="config-section">
+      <h4>Metadata</h4>
+      <div class="metadata-grid">
+        <div class="metadata-item">
+          <span class="metadata-label">Agent ID:</span>
+          <span class="metadata-value">{{ agent.id }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Last Active:</span>
+          <span class="metadata-value">{{ agent.lastHeartbeat | date:'medium' }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Status:</span>
+          <span class="metadata-value">{{ agent.status }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Priority:</span>
+          <span class="metadata-value">{{ agent.priority }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<div class="pinned-agents">
+  <!-- Header Section -->
+  <div class="agents-header">
+    <div class="header-content">
+      <h2 class="page-title">
+        <i nz-icon nzType="pushpin" nzTheme="outline"></i>
+        Pinned Agents
+      </h2>
+      <p class="page-description">
+        Quick access to your most frequently used agents. Pin agents to keep them easily accessible for your daily workflows.
+      </p>
+    </div>
+    
+    <div class="header-actions" *ngIf="pinnedAgents.length > 0">
+      <button 
+        nz-button 
+        nzType="default" 
+        nzDanger
+        (click)="clearAllPins()"
+        nz-popconfirm
+        nzPopconfirmTitle="Are you sure you want to unpin all agents?"
+        nzPopconfirmPlacement="bottomRight">
+        <i nz-icon nzType="close" nzTheme="outline"></i>
+        Clear All Pins
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Access Bar -->
+  <div class="quick-access" *ngIf="pinnedAgents.length > 0 && pinnedAgents.length <= 6">
+    <div class="quick-access-title">Quick Access</div>
+    <div class="quick-access-items">
+      <div 
+        class="quick-access-item" 
+        *ngFor="let agent of pinnedAgents"
+        (click)="onAgentSelect(agent)"
+        nz-tooltip
+        [nzTooltipTitle]="agent.description">
+        <div class="item-icon" [style.background-color]="agent.ui.color">
+          <i nz-icon [nzType]="agent.ui.icon" nzTheme="outline"></i>
+        </div>
+        <div class="item-name">{{ agent.name }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <nz-spin nzSize="large">
+      <div class="loading-text">Loading pinned agents...</div>
+    </nz-spin>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="agents-content" *ngIf="!loading && pinnedAgents.length > 0">
+    <!-- All Pinned Agents -->
+    <div class="content-section" *ngIf="getUniqueCategories().length === 1">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i nz-icon nzType="pushpin" nzTheme="outline"></i>
+          All Pinned Agents
+        </h3>
+        <div class="section-meta">
+          <nz-badge [nzCount]="pinnedAgents.length" nzStatus="processing">
+          </nz-badge>
+        </div>
+      </div>
+      
+      <div class="section-content">
+        <!-- Grid View -->
+        <div class="agents-grid" *ngIf="viewMode === 'grid'">
+          <app-agent-card
+            *ngFor="let agent of pinnedAgents"
+            [agent]="agent"
+            [showActions]="true"
+            [isPinned]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-card>
+        </div>
+
+        <!-- List View -->
+        <div class="agents-list" *ngIf="viewMode === 'list'">
+          <app-agent-list
+            [agents]="pinnedAgents"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-list>
+        </div>
+
+        <!-- Timeline View -->
+        <div class="agents-timeline" *ngIf="viewMode === 'timeline'">
+          <app-agent-timeline
+            [agents]="pinnedAgents"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-timeline>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pinned Agents by Category -->
+    <div class="content-section" *ngFor="let category of getUniqueCategories()" 
+         [hidden]="getUniqueCategories().length === 1">
+      <div class="section-header">
+        <h3 class="section-title">
+          <i nz-icon nzType="folder" nzTheme="outline"></i>
+          {{ category | titlecase }}
+        </h3>
+        <div class="section-meta">
+          <nz-badge [nzCount]="getAgentsByCategory(category).length" nzStatus="processing">
+          </nz-badge>
+        </div>
+      </div>
+      
+      <div class="section-content">
+        <!-- Grid View -->
+        <div class="agents-grid" *ngIf="viewMode === 'grid'">
+          <app-agent-card
+            *ngFor="let agent of getAgentsByCategory(category)"
+            [agent]="agent"
+            [showActions]="true"
+            [isPinned]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-card>
+        </div>
+
+        <!-- List View -->
+        <div class="agents-list" *ngIf="viewMode === 'list'">
+          <app-agent-list
+            [agents]="getAgentsByCategory(category)"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-list>
+        </div>
+
+        <!-- Timeline View -->
+        <div class="agents-timeline" *ngIf="viewMode === 'timeline'">
+          <app-agent-timeline
+            [agents]="getAgentsByCategory(category)"
+            [showActions]="true"
+            (agentSelect)="onAgentSelect($event)"
+            (agentUnpin)="onAgentUnpin($event)"
+            (agentExecute)="onAgentExecute($event)"
+            (agentConfigure)="onAgentConfigure($event)">
+          </app-agent-timeline>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-pinned" *ngIf="pinnedAgents.length === 0 && !loading">
+    <nz-empty 
+      nzNotFoundImage="simple" 
+      nzNotFoundContent="No pinned agents yet">
+      <div class="empty-footer">
+        <p class="empty-description">
+          Pin your favorite agents for quick access. Browse the Agent Hub to find agents you use frequently.
+        </p>
+        <button nz-button nzType="primary" (click)="navigateToHub()">
+          <i nz-icon nzType="appstore" nzTheme="outline"></i>
+          Browse Agent Hub
+        </button>
+      </div>
+    </nz-empty>
+  </div>
+</div>

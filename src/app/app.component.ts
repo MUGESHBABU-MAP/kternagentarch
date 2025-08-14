@@ -3,18 +3,11 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="h-screen bg-background">
+    <app-main-layout>
       <router-outlet></router-outlet>
-    </div>
+    </app-main-layout>
   `,
-  styles: [`
-    .h-screen {
-      height: 100vh;
-    }
-    .bg-background {
-      background-color: #ffffff;
-    }
-  `]
+  styles: []
 })
 export class AppComponent implements OnInit {
   title = 'Digital Maps Assessment';

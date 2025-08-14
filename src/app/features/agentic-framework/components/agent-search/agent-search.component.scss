@@ -1,0 +1,46 @@
+.agent-search {
+  width: 100%;
+
+  nz-input-group {
+    .clear-icon {
+      color: #bfbfbf;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #ff4d4f;
+      }
+    }
+
+    input {
+      border-radius: 8px;
+      
+      &:focus {
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+      }
+    }
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .agent-search {
+    nz-input-group {
+      input {
+        background: #1f1f1f;
+        border-color: #434343;
+        color: #fff;
+
+        &::placeholder {
+          color: #8c8c8c;
+        }
+
+        &:focus {
+          border-color: #177ddc;
+          box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
+        }
+      }
+    }
+  }
+}

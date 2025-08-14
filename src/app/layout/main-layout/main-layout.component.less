@@ -1,0 +1,71 @@
+@import "~ng-zorro-antd/ng-zorro-antd.less";
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+  transition: all 0.2s ease;
+  height: 100%;
+  overflow: hidden;
+  border-right: 1px solid #f0f0f0;
+  z-index: 10;
+
+  &-collapsed {
+    width: 80px;
+  }
+
+  &-expanded {
+    width: 200px;
+  }
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  transition: all 0.2s ease;
+  background-color: #f5f5f5;
+
+  &-collapsed {
+    margin-left: 40px;
+  }
+
+  &-expanded {
+    margin-left: 160px;
+  }
+  
+  &-full {
+    margin-left: 0 !important;
+    padding: 0;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &-expanded {
+      transform: translateX(0);
+    }
+  }
+
+  .main-content {
+    &-collapsed, &-expanded {
+      margin-left: 0;
+    }
+  }
+}

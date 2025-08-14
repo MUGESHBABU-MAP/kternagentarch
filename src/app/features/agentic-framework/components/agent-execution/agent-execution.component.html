@@ -1,0 +1,84 @@
+<div class="agent-execution" *ngIf="execution">
+  <div class="execution-card" (click)="onExecutionClick()">
+    <div class="execution-header">
+      <div class="execution-info">
+        <div class="execution-id">{{ execution.id }}</div>
+        <div class="execution-agent">{{ execution.agentId }}</div>
+        <div class="execution-time">
+          <i nz-icon nzType="clock-circle"></i>
+          {{ execution.startTime | date:'medium' }}
+        </div>
+      </div>
+      <div class="execution-status">
+        <nz-tag [nzColor]="getStatusColor(execution.status)">
+          <i nz-icon [nzType]="getStatusIcon(execution.status)" [nzSpin]="execution.status === 'running'"></i>
+          {{ execution.status | titlecase }}
+        </nz-tag>
+      </div>
+    </div>
+
+    <div class="execution-progress" *ngIf="execution.status === 'running' || execution.progress > 0">
+      <div class="progress-info">
+        <span class="progress-label">Progress:</span>
+        <span class="progress-value">{{ execution.progress }}%</span>
+      </div>
+      <nz-progress 
+        [nzPercent]="execution.progress" 
+        [nzStatus]="getProgressStatus()"
+        nzSize="small">
+      </nz-progress>
+    </div>
+
+    <div class="execution-details">
+      <div class="detail-item">
+        <span class="detail-label">Duration:</span>
+        <span class="detail-value">{{ formatDuration(execution.startTime, execution.endTime) }}</span>
+      </div>
+      <div class="detail-item" *ngIf="execution.endTime">
+        <span class="detail-label">Completed:</span>
+        <span class="detail-value">{{ execution.agentId }}</span>
+      </div>
+      <div class="detail-item" *ngIf="execution.agentId">
+        <span class="detail-label">Trigger:</span>
+        <span class="context-value">{{ execution.agentId }}</span>
+      </div>
+    </div>
+
+    <div class="execution-logs" *ngIf="showLogs && execution.logs && execution.logs.length > 0">
+      <div class="logs-header">
+        <span class="logs-title">Recent Logs</span>
+        <span class="logs-count">{{ execution.logs.length }}</span>
+      </div>
+      <div class="logs-content">
+        <div class="log-entry" 
+             *ngFor="let log of execution.logs.slice(-3); let i = index"
+             [class]="'log-' + log.level">
+          <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+          <span class="log-level">{{ log.level.toUpperCase() }}</span>
+          <span class="log-message">{{ log.message }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="execution-actions" *ngIf="showActions">
+      <button nz-button nzType="text" nzSize="small" 
+              *ngIf="execution.status === 'running'"
+              (click)="onStopExecution(); $event.stopPropagation()">
+        <i nz-icon nzType="stop"></i>
+        Stop
+      </button>
+      <button nz-button nzType="text" nzSize="small" 
+              *ngIf="execution.status === 'completed'"
+              (click)="onRestartExecution(); $event.stopPropagation()">
+        <i nz-icon nzType="reload"></i>
+        Restart
+      </button>
+      <button nz-button nzType="text" nzSize="small" 
+              (click)="onDeleteExecution(); $event.stopPropagation()"
+              class="danger-action">
+        <i nz-icon nzType="delete"></i>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

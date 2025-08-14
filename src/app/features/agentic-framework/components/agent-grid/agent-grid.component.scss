@@ -1,0 +1,86 @@
+.agent-grid {
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 4px;
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+
+    .loading-text {
+      margin-top: 16px;
+      color: #666;
+      font-size: 16px;
+    }
+  }
+
+  .empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+
+    nz-empty-footer {
+      .empty-message {
+        font-size: 16px;
+        font-weight: 500;
+        color: #262626;
+        margin-bottom: 8px;
+      }
+
+      .empty-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .agent-grid {
+    .grid-container {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .agent-grid {
+    .grid-container {
+      gap: 12px;
+      padding: 2px;
+    }
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .agent-grid {
+    .loading-container {
+      .loading-text {
+        color: #bfbfbf;
+      }
+    }
+
+    .empty-container {
+      nz-empty-footer {
+        .empty-message {
+          color: #fff;
+        }
+
+        .empty-description {
+          color: #bfbfbf;
+        }
+      }
+    }
+  }
+}
